@@ -9,6 +9,7 @@ type TodoItem = {
     onDelete: (itemId: string) => void;
     id: string;
 }
+type Categories = 'all' | 'active' | 'done';
 
 type TodoContextType = {
     items: TodoItem[];
@@ -19,6 +20,8 @@ type TodoContextType = {
     searchTodo: (searchValue: string) => void;
     filteredItems: TodoItem[];
     searchValue: string;
+    categories: Categories;
+    setCategories: (categories: Categories) => void
 }
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
@@ -27,6 +30,7 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
     const [items, setItems] = useState<TodoItem[]>([]);
     const [idCounter, setIdCounter] = useState<number>(1);
     const [searchValue, setSearchValue] = useState<string>('');
+    const [categories, setCategories] = useState<Categories>('all');
 
     const addTodo = (newTodo: Omit<TodoItem, 'id'>) => {
         const todoWithId: TodoItem = { ...newTodo, id: idCounter.toString() };
@@ -43,6 +47,7 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             item.id === id ? { ...item, isDone: !item.isDone } : item,
         ));
     };
+
     const toggleImportant = (id: string) => {
         setItems(items.map((item) =>
             item.id === id ? { ...item, isImportant: !item.isImportant } : item,
@@ -53,8 +58,11 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
         setSearchValue(searchValue);
     };
 
-    const filteredItems = items.filter(item =>
-        item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()),
+    const filteredItems = items.filter(item => {
+            const searchResult = item.itemLabel.toLowerCase().includes(searchValue.toLowerCase());
+            const categoryResult = categories === 'all' ? true : categories === 'active' ? !item.isDone : item.isDone;
+            return searchResult && categoryResult;
+        },
     );
 
     return (<TodoContext.Provider
@@ -66,7 +74,9 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             toggleImportant,
             searchTodo,
             filteredItems,
-            searchValue
+            searchValue,
+            categories,
+            setCategories,
         }}> {children} </TodoContext.Provider>);
 };
 

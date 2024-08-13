@@ -33,6 +33,6 @@ export const TodoFilter = () => {
     };
 
     return (
-        <Tabs activeKey={activeKey} onChange={onChange} type={'line'} size={'large'} items={items} />
+        <Tabs activeKey={activeKey} centered onChange={onChange} type={'line'} size={'large'} items={items} />
     );
 };
