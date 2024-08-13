@@ -9,7 +9,8 @@ type TodoItem = {
     onDelete: (itemId: string) => void;
     id: string;
 }
-type Categories = 'all' | 'active' | 'done';
+
+export type Categories = 'all' | 'active' | 'done';
 
 type TodoContextType = {
     items: TodoItem[];
@@ -21,7 +22,10 @@ type TodoContextType = {
     filteredItems: TodoItem[];
     searchValue: string;
     categories: Categories;
-    setCategories: (categories: Categories) => void
+    setCategories: (categories: Categories) => void;
+    getDoneCount: () => number;
+    getTodoCount: () => number;
+
 }
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
@@ -58,12 +62,11 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
         setSearchValue(searchValue);
     };
 
-    const filteredItems = items.filter(item => {
-            const searchResult = item.itemLabel.toLowerCase().includes(searchValue.toLowerCase());
-            const categoryResult = categories === 'all' ? true : categories === 'active' ? !item.isDone : item.isDone;
-            return searchResult && categoryResult;
-        },
-    );
+    const filteredItems = items.filter(item => item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()));
+    const filteredCategoryResult = categories === 'all' ? filteredItems : categories === 'active' ? filteredItems.filter(item => !item.isDone) : filteredItems.filter(item => item.isDone);
+
+    const getDoneCount = () => items.filter(item => item.isDone).length;
+    const getTodoCount = () => items.filter(item => !item.isDone).length;
 
     return (<TodoContext.Provider
         value={{
@@ -73,17 +76,19 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             toggleDone,
             toggleImportant,
             searchTodo,
-            filteredItems,
+            filteredItems: filteredCategoryResult,
             searchValue,
             categories,
             setCategories,
+            getTodoCount,
+            getDoneCount,
         }}> {children} </TodoContext.Provider>);
 };
 
-export const useTodo = (): TodoContextType => {
+export const useTodoContext = (): TodoContextType => {
     const context = useContext(TodoContext);
     if (!context) {
-        throw new Error('useTodo должен быть внутри TodoProvider');
+        throw new Error('useTodoContext должен быть внутри TodoProvider');
     }
 
     return context;

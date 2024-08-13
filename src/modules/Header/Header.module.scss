@@ -1,0 +1,10 @@
+.headerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.taskCount {
+  margin-bottom: 0.3em;
+}

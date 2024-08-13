@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs } from 'antd';
+import { Categories, useTodoContext } from '../../context/TodoContext';
 
 type TabItem = {
     key: string;
@@ -9,30 +10,31 @@ type TabItem = {
 
 const items: TabItem[] = [
     {
-        key: '1',
+        key: 'all',
         label: 'All',
         children: '',
     },
     {
-        key: '2',
+        key: 'active',
         label: 'Active',
         children: '',
     },
     {
-        key: '3',
+        key: 'done',
         label: 'Done',
         children: '',
     },
 ];
 
 export const TodoFilter = () => {
-    const [activeKey, setActiveKey] = useState<string>('1');
+    const {categories, setCategories} = useTodoContext();
+
 
     const onChange = (key: string) => {
-        setActiveKey(key);
+        setCategories(key as Categories);
     };
 
     return (
-        <Tabs activeKey={activeKey} centered onChange={onChange} type={'line'} size={'large'} items={items} />
+        <Tabs activeKey={categories} centered onChange={onChange} type={'line'} size={'large'} items={items} />
     );
 };

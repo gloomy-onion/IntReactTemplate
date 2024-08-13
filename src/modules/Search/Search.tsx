@@ -1,9 +1,9 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Input } from 'antd';
-import { useTodo } from '../../context/TodoContext';
+import { useTodoContext } from '../../context/TodoContext';
 
 export const Search = () => {
-    const { searchTodo, searchValue } = useTodo();
+    const { searchTodo, searchValue } = useTodoContext();
 
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
         searchTodo(event.target.value);

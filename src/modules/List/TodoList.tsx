@@ -2,10 +2,10 @@ import React from 'react';
 import { List } from 'antd';
 import { TodoItem } from '../Item';
 import styles from './TodoList.module.scss';
-import { useTodo } from '../../context/TodoContext';
+import { useTodoContext } from '../../context/TodoContext';
 
 export const TodoList = () => {
-    const {items, deleteTodo, toggleDone, toggleImportant, filteredItems, searchValue} = useTodo();
+    const {items, deleteTodo, toggleDone, toggleImportant, filteredItems, searchValue} = useTodoContext();
 
     const resultItems = !filteredItems.length && !searchValue ? items : filteredItems;
 

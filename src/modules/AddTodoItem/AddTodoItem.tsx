@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Input } from 'antd';
 import styles from './AddTodoItem.module.scss';
-import { useTodo } from '../../context/TodoContext';
+import { useTodoContext } from '../../context/TodoContext';
 
 export const AddTodoItem = () => {
-    const { addTodo } = useTodo();
+    const { addTodo } = useTodoContext();
     const [newTask, setNewTask] = useState('');
 
     const handleAddTodo = () => {
@@ -13,16 +13,19 @@ export const AddTodoItem = () => {
                 itemLabel: newTask,
                 isImportant: false,
                 isDone: false,
-                onToggleDone: () => {},
-                onToggleImportant: () => {},
-                onDelete: () => {},
+                onToggleDone: () => {
+                },
+                onToggleImportant: () => {
+                },
+                onDelete: () => {
+                },
             });
             setNewTask('');
         }
     };
 
     return (
-        <div className={styles.addTodoItemContainer}>
+        <form className={styles.addTodoItemContainer}>
             <Input
                 size={'large'}
                 value={newTask}
@@ -35,6 +38,6 @@ export const AddTodoItem = () => {
             >
                 Add
             </Button>
-        </div>
+        </form>
     );
 };
