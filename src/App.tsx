@@ -1,5 +1,13 @@
+import { MainPage } from './pages/MainPage';
+import { TodoProvider } from './context/TodoContext';
+
 function App() {
-    return <div>Hello world</div>;
+
+    return (
+        <TodoProvider>
+            <MainPage />
+        </TodoProvider>
+    );
 }
 
 export default App;
