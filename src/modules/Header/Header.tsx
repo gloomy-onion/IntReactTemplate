@@ -12,9 +12,7 @@ export const Header = () => {
     return (
         <div className={styles.headerContainer}>
             <Typography.Title>Todo List</Typography.Title>
-            <div className={styles.taskCount}>
-                <Typography.Title level={2}>{todo} more to do, {done} done</Typography.Title>
+                <Typography.Title className={styles.taskCount} level={2}>{todo} more to do, {done} done</Typography.Title>
             </div>
-        </div>
     );
 };

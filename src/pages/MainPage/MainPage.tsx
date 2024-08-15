@@ -8,12 +8,12 @@ import { Header } from '../../modules/Header';
 
 export const MainPage = () => {
     return (
-        <div className={styles.mainPageContainer}>
+        <main className={styles.mainPageContainer}>
             <Header />
             <Search />
             <TodoFilter />
             <TodoList />
             <AddTodoItem />
-        </div>
+        </main>
     );
 };
