@@ -9,7 +9,5 @@ export const Search = () => {
         searchTodo(event.target.value);
     };
 
-    return (
-        <Input.Search size={'large'} onChange={handleSearchChange} value={searchValue} />
-    );
+    return <Input.Search size="large" onChange={handleSearchChange} value={searchValue} />;
 };

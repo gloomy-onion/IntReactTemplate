@@ -1,7 +1,11 @@
 import React from 'react';
 import { Checkbox, Typography } from 'antd';
-import styles from './TodoItem.module.scss';
 import { DeleteTwoTone, FireTwoTone } from '@ant-design/icons';
+import cn from 'classnames';
+import styles from './TodoItem.module.scss';
+import { useThemeContext } from '../../context/ThemeContext';
+import { getTextColor } from '../../shared/lib/utils/themeUtils';
+import themeStyles from '../../shared/lib/styles/Theme.module.scss';
 
 type TodoItemProps = {
     itemLabel: string;
@@ -14,23 +18,28 @@ type TodoItemProps = {
 };
 
 export const TodoItem = ({
-                             itemLabel,
-                             isImportant,
-                             isDone,
-                             onToggleDone,
-                             onToggleImportant,
-                             onDelete,
-                             id,
-                         }: TodoItemProps) => {
+    itemLabel,
+    isImportant,
+    isDone,
+    onToggleDone,
+    onToggleImportant,
+    onDelete,
+    id,
+}: TodoItemProps) => {
+    const { currentTheme } = useThemeContext();
+
+    const typographyColor = getTextColor(currentTheme);
 
     return (
         <div className={styles.todoItemContainer}>
-            <Checkbox
-                checked={isDone}
-                onChange={() => onToggleDone(id)}
-            />
-            <Typography.Text className={isDone ? styles.todoItemDone : ''} style={{ fontSize: 20, cursor: 'pointer' }}
-                             onClick={() => onToggleDone(id)}>{itemLabel}</Typography.Text>
+            <Checkbox checked={isDone} onChange={() => onToggleDone(id)} />
+            <Typography.Text
+                className={cn(isDone ? styles.todoItemDone : '', themeStyles[typographyColor])}
+                style={{ fontSize: 20, cursor: 'pointer' }}
+                onClick={() => onToggleDone(id)}
+            >
+                {itemLabel}
+            </Typography.Text>
             <div className={styles.todoItemButtons}>
                 <FireTwoTone
                     twoToneColor={isImportant ? '#ffA500' : '#ccc'}

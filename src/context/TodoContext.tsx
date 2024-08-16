@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 
 type TodoItem = {
     itemLabel: string;
@@ -8,7 +8,7 @@ type TodoItem = {
     onToggleImportant: (id: string) => void;
     onDelete: (itemId: string) => void;
     id: string;
-}
+};
 
 export type Categories = 'all' | 'active' | 'done';
 
@@ -25,8 +25,7 @@ type TodoContextType = {
     setCategories: (categories: Categories) => void;
     getDoneCount: () => number;
     getTodoCount: () => number;
-
-}
+};
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
@@ -43,33 +42,42 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const deleteTodo = (id: string) => {
-        setItems(items.filter(item => item.id !== id));
+        setItems(items.filter((item) => item.id !== id));
     };
 
     const toggleDone = (id: string) => {
-        setItems(items.map((item) =>
-            item.id === id ? { ...item, isDone: !item.isDone } : item,
-        ));
+        setItems(items.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)));
     };
 
     const toggleImportant = (id: string) => {
-        setItems(items.map((item) =>
-            item.id === id ? { ...item, isImportant: !item.isImportant } : item,
-        ));
+        setItems(
+            items.map((item) =>
+                (item.id === id ? { ...item, isImportant: !item.isImportant } : item),
+            ),
+        );
     };
 
     const searchTodo = (searchValue: string) => {
         setSearchValue(searchValue);
     };
 
-    const filteredItems = items.filter(item => item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()));
-    const filteredCategoryResult = categories === 'all' ? filteredItems : categories === 'active' ? filteredItems.filter(item => !item.isDone) : filteredItems.filter(item => item.isDone);
+    const filteredItems = items.filter(
+        (item) =>
+            item.itemLabel && item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()),
+    );
 
-    const getDoneCount = () => items.filter(item => item.isDone).length;
-    const getTodoCount = () => items.filter(item => !item.isDone).length;
+    const filteredCategoryResult =
+        categories === 'all'
+            ? filteredItems
+            : categories === 'active'
+            ? filteredItems.filter((item) => !item.isDone)
+            : filteredItems.filter((item) => item.isDone);
 
-    return (<TodoContext.Provider
-        value={{
+    const getDoneCount = () => items.filter((item) => item.isDone).length;
+    const getTodoCount = () => items.filter((item) => !item.isDone).length;
+
+    const value = useMemo(
+        () => ({
             items,
             addTodo,
             deleteTodo,
@@ -82,7 +90,24 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             setCategories,
             getTodoCount,
             getDoneCount,
-        }}> {children} </TodoContext.Provider>);
+        }),
+        [
+            items,
+            addTodo,
+            deleteTodo,
+            toggleDone,
+            toggleImportant,
+            searchTodo,
+            filteredCategoryResult,
+            searchValue,
+            categories,
+            setCategories,
+            getTodoCount,
+            getDoneCount,
+        ],
+    );
+
+    return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 };
 
 export const useTodoContext = (): TodoContextType => {
