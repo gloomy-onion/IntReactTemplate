@@ -6,10 +6,12 @@ import { useTodoContext } from '../../context/TodoContext';
 import { useThemeContext } from '../../context/ThemeContext';
 import { getButtonType, getTextColor } from '../../shared/lib/utils/themeUtils';
 import themeStyles from '../../shared/lib/styles/Theme.module.scss';
+import { useLocalizationContext } from '../../context/LocalizationContext';
 
 export const Header = () => {
     const { getTodoCount, getDoneCount } = useTodoContext();
     const { currentTheme, toggleTheme } = useThemeContext();
+    const { toggleLanguage, translate } = useLocalizationContext();
 
     const todo = getTodoCount();
     const done = getDoneCount();
@@ -19,18 +21,25 @@ export const Header = () => {
 
     return (
         <div className={styles.headerContainer}>
-            <Button type={buttonType} size="large" onClick={toggleTheme}>
-                Change theme
-            </Button>
+            <div className={styles.headerButtons}>
+                <Button type={buttonType} size="large" onClick={toggleLanguage}>
+                    {translate('changeLanguage')}
+                </Button>
+                <Button type={buttonType} size="large" onClick={toggleTheme}>
+                    {translate('changeTheme')}
+                </Button>
+            </div>
             <div className={styles.headerTitles}>
                 <Typography.Title className={themeStyles[typographyColor]}>
-                    Todo List
+                    {translate('title')}
                 </Typography.Title>
                 <Typography.Title
                     className={cn(styles.taskCount, themeStyles[typographyColor])}
                     level={2}
                 >
-                    {todo} more to do, {done} done
+                    {`${todo} ${translate('headerCounterToDo')}, ${done} ${translate(
+                        'headerCounterDone',
+                    )}`}
                 </Typography.Title>
             </div>
         </div>
