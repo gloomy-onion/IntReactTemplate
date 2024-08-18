@@ -27,14 +27,20 @@ const items: TabItem[] = [
 ];
 
 export const TodoFilter = () => {
-    const {categories, setCategories} = useTodoContext();
-
+    const { categories, setCategories } = useTodoContext();
 
     const onChange = (key: string) => {
         setCategories(key as Categories);
     };
 
     return (
-        <Tabs activeKey={categories} centered onChange={onChange} type={'line'} size={'large'} items={items} />
+        <Tabs
+            activeKey={categories}
+            centered
+            onChange={onChange}
+            type="line"
+            size="large"
+            items={items}
+        />
     );
 };

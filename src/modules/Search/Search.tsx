@@ -3,13 +3,11 @@ import { Input } from 'antd';
 import { useTodoContext } from '../../context/TodoContext';
 
 export const Search = () => {
-    const { searchTodo, searchValue } = useTodoContext();
+    const { setSearchValue, searchValue } = useTodoContext();
 
     const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-        searchTodo(event.target.value);
+        setSearchValue(event.target.value);
     };
 
-    return (
-        <Input.Search size={'large'} onChange={handleSearchChange} value={searchValue} />
-    );
+    return <Input.Search size="large" onChange={handleSearchChange} value={searchValue} />;
 };

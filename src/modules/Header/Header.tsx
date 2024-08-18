@@ -4,15 +4,14 @@ import styles from './Header.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
 
 export const Header = () => {
-
-    const { getTodoCount, getDoneCount } = useTodoContext();
-    const todo = getTodoCount();
-    const done = getDoneCount();
+    const { todo, done } = useTodoContext();
 
     return (
-        <div className={styles.headerContainer}>
+        <div className={styles.header}>
             <Typography.Title>Todo List</Typography.Title>
-                <Typography.Title className={styles.taskCount} level={2}>{todo} more to do, {done} done</Typography.Title>
-            </div>
+            <Typography.Title className={styles.taskCount} level={2}>
+                {todo} more to do, {done} done
+            </Typography.Title>
+        </div>
     );
 };

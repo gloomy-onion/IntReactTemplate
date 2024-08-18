@@ -4,11 +4,8 @@ type TodoItem = {
     itemLabel: string;
     isImportant: boolean;
     isDone: boolean;
-    onToggleDone: (id: string) => void;
-    onToggleImportant: (id: string) => void;
-    onDelete: (itemId: string) => void;
     id: string;
-}
+};
 
 export type Categories = 'all' | 'active' | 'done';
 
@@ -18,71 +15,76 @@ type TodoContextType = {
     deleteTodo: (id: string) => void;
     toggleDone: (id: string) => void;
     toggleImportant: (id: string) => void;
-    searchTodo: (searchValue: string) => void;
+    setSearchValue: (searchValue: string) => void;
     filteredItems: TodoItem[];
     searchValue: string;
     categories: Categories;
     setCategories: (categories: Categories) => void;
-    getDoneCount: () => number;
-    getTodoCount: () => number;
-
-}
+    done: number;
+    todo: number;
+};
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
 export const TodoProvider = ({ children }: { children: ReactNode }) => {
     const [items, setItems] = useState<TodoItem[]>([]);
-    const [idCounter, setIdCounter] = useState<number>(1);
     const [searchValue, setSearchValue] = useState<string>('');
     const [categories, setCategories] = useState<Categories>('all');
 
     const addTodo = (newTodo: Omit<TodoItem, 'id'>) => {
-        const todoWithId: TodoItem = { ...newTodo, id: idCounter.toString() };
-        setItems([...items, todoWithId]);
-        setIdCounter(idCounter + 1);
+        const todoWithId: TodoItem = { ...newTodo, id: Date.now().toString() };
+        setItems((prev) => [...prev, todoWithId]);
     };
 
     const deleteTodo = (id: string) => {
-        setItems(items.filter(item => item.id !== id));
+        setItems((prev) => prev.filter((item) => item.id !== id));
     };
 
     const toggleDone = (id: string) => {
-        setItems(items.map((item) =>
-            item.id === id ? { ...item, isDone: !item.isDone } : item,
-        ));
+        setItems((prev) =>
+            prev.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)),);
     };
 
     const toggleImportant = (id: string) => {
-        setItems(items.map((item) =>
-            item.id === id ? { ...item, isImportant: !item.isImportant } : item,
-        ));
+        setItems((prev) =>
+            prev.map((item) =>
+                (item.id === id ? { ...item, isImportant: !item.isImportant } : item),),);
     };
+    //тут линтер сам себе противоречит и чудит
 
-    const searchTodo = (searchValue: string) => {
-        setSearchValue(searchValue);
-    };
+    const filteredItems = items.filter((item) =>
+        item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()),
+    );
+    const filteredCategoryResult =
+        categories === 'all'
+            ? filteredItems
+            : categories === 'active'
+            ? filteredItems.filter((item) => !item.isDone)
+            : filteredItems.filter((item) => item.isDone);
 
-    const filteredItems = items.filter(item => item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()));
-    const filteredCategoryResult = categories === 'all' ? filteredItems : categories === 'active' ? filteredItems.filter(item => !item.isDone) : filteredItems.filter(item => item.isDone);
+    const done = items.filter((item) => item.isDone).length;
+    const todo = items.filter((item) => !item.isDone).length;
 
-    const getDoneCount = () => items.filter(item => item.isDone).length;
-    const getTodoCount = () => items.filter(item => !item.isDone).length;
-
-    return (<TodoContext.Provider
-        value={{
-            items,
-            addTodo,
-            deleteTodo,
-            toggleDone,
-            toggleImportant,
-            searchTodo,
-            filteredItems: filteredCategoryResult,
-            searchValue,
-            categories,
-            setCategories,
-            getTodoCount,
-            getDoneCount,
-        }}> {children} </TodoContext.Provider>);
+    return (
+        <TodoContext.Provider
+            value={{
+                items,
+                addTodo,
+                deleteTodo,
+                toggleDone,
+                toggleImportant,
+                setSearchValue,
+                filteredItems: filteredCategoryResult,
+                searchValue,
+                categories,
+                setCategories,
+                todo,
+                done,
+            }}
+        >
+            {children}
+        </TodoContext.Provider>
+    );
 };
 
 export const useTodoContext = (): TodoContextType => {

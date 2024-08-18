@@ -8,7 +8,7 @@ import { Header } from '../../modules/Header';
 
 export const MainPage = () => {
     return (
-        <main className={styles.mainPageContainer}>
+        <main className={styles.mainPage}>
             <Header />
             <Search />
             <TodoFilter />

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Checkbox, Typography } from 'antd';
-import styles from './TodoItem.module.scss';
 import { DeleteTwoTone, FireTwoTone } from '@ant-design/icons';
+import cn from 'classnames';
+import styles from './TodoItem.module.scss';
 
 type TodoItemProps = {
     itemLabel: string;
@@ -14,35 +15,29 @@ type TodoItemProps = {
 };
 
 export const TodoItem = ({
-                             itemLabel,
-                             isImportant,
-                             isDone,
-                             onToggleDone,
-                             onToggleImportant,
-                             onDelete,
-                             id,
-                         }: TodoItemProps) => {
-
-    return (
-        <div className={styles.todoItemContainer}>
-            <Checkbox
-                checked={isDone}
-                onChange={() => onToggleDone(id)}
+    itemLabel,
+    isImportant,
+    isDone,
+    onToggleDone,
+    onToggleImportant,
+    onDelete,
+    id,
+}: TodoItemProps) => (
+    <div className={styles.todoItem}>
+        <Checkbox checked={isDone} onChange={() => onToggleDone(id)} />
+        <Typography.Text
+            className={cn(styles.todoItemLabel, { [styles.todoItemDone]: isDone })}
+            onClick={() => onToggleDone(id)}
+        >
+            {itemLabel}
+        </Typography.Text>
+        <div className={styles.todoItemButtons}>
+            <FireTwoTone
+                className={styles.todoItemImportant}
+                twoToneColor={isImportant ? '#ffA500' : '#ccc'}
+                onClick={() => onToggleImportant(id)}
             />
-            <Typography.Text className={isDone ? styles.todoItemDone : ''} style={{ fontSize: 20, cursor: 'pointer' }}
-                             onClick={() => onToggleDone(id)}>{itemLabel}</Typography.Text>
-            <div className={styles.todoItemButtons}>
-                <FireTwoTone
-                    twoToneColor={isImportant ? '#ffA500' : '#ccc'}
-                    onClick={() => onToggleImportant(id)}
-                    style={{ fontSize: 24 }}
-                />
-                <DeleteTwoTone
-                    className={styles.deleteButton}
-                    onClick={() => onDelete(id)}
-                    style={{ fontSize: 24 }}
-                />
-            </div>
+            <DeleteTwoTone className={styles.deleteButton} onClick={() => onDelete(id)} />
         </div>
-    );
-};
+    </div>
+);
