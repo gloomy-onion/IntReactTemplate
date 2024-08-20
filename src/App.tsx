@@ -1,5 +1,8 @@
-function App() {
-    return <div>Hello world</div>;
-}
+import { MainPage } from './pages/MainPage';
+import { TodoProvider } from './context/TodoContext';
 
-export default App;
+export const App = () => (
+    <TodoProvider>
+        <MainPage />
+    </TodoProvider>
+);
