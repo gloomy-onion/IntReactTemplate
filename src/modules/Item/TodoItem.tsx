@@ -39,8 +39,8 @@ export const TodoItem = ({
                         [styles.todoItemDone]: isDone,
                     },
                     themeStyles[typographyColor],
+                    styles.todoItemText,
                 )}
-                style={{ fontSize: 20, cursor: 'pointer' }}
                 onClick={() => onToggleDone(id)}
             >
                 {itemLabel}
@@ -49,12 +49,11 @@ export const TodoItem = ({
                 <FireTwoTone
                     twoToneColor={isImportant ? '#ffA500' : '#ccc'}
                     onClick={() => onToggleImportant(id)}
-                    style={{ fontSize: 24 }}
+                    className={styles.todoItemIcons}
                 />
                 <DeleteTwoTone
-                    className={styles.deleteButton}
+                    className={cn(styles.deleteButton, styles.todoItemIcons)}
                     onClick={() => onDelete(id)}
-                    style={{ fontSize: 24 }}
                 />
             </div>
         </div>
