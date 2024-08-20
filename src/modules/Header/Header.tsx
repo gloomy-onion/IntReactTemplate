@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Typography } from 'antd';
 import cn from 'classnames';
+import { Button, Typography } from 'antd';
 import styles from './Header.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
 import { useThemeContext } from '../../context/ThemeContext';
@@ -8,11 +8,8 @@ import { getButtonType, getTextColor } from '../../shared/lib/utils/themeUtils';
 import themeStyles from '../../shared/lib/styles/Theme.module.scss';
 
 export const Header = () => {
-    const { getTodoCount, getDoneCount } = useTodoContext();
+    const { todo, done } = useTodoContext();
     const { currentTheme, toggleTheme } = useThemeContext();
-
-    const todo = getTodoCount();
-    const done = getDoneCount();
 
     const buttonType = getButtonType(currentTheme);
     const typographyColor = getTextColor(currentTheme);
