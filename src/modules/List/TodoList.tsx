@@ -12,7 +12,7 @@ export const TodoList = () => {
 
     return (
         <List
-            className={styles.listContainer}
+            className={styles.list}
             dataSource={resultItems}
             renderItem={(item) => (
                 <List.Item>

@@ -4,20 +4,13 @@ import { i18n, Language } from '../shared/lib/i18n/translations';
 type LocalizationContextType = {
     language: Language;
     translate: (key: string) => string;
-    toggleLanguage: () => void;
+    setLanguage: (language: Language) => void;
 };
 
 const LocalizationContext = createContext<LocalizationContextType | undefined>(undefined);
 
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     const [language, setLanguage] = useState<Language>('en');
-
-    const toggleLanguage = useMemo(
-        () => () => {
-            setLanguage((prevLanguage) => (prevLanguage === 'en' ? 'ru' : 'en'));
-        },
-        [],
-    );
 
     const translate = useMemo(
         () =>
@@ -34,11 +27,11 @@ export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
 
     const value = useMemo(
         () => ({
-            toggleLanguage,
+            setLanguage,
             language,
             translate,
         }),
-        [language, translate, toggleLanguage],
+        [language, translate],
     );
 
     return <LocalizationContext.Provider value={value}>{children}</LocalizationContext.Provider>;

@@ -7,11 +7,12 @@ import { useThemeContext } from '../../context/ThemeContext';
 import { getButtonType, getTextColor } from '../../shared/lib/utils/themeUtils';
 import themeStyles from '../../shared/lib/styles/Theme.module.scss';
 import { useLocalizationContext } from '../../context/LocalizationContext';
+import { LanguageDropdown } from '../LanguageDropdown';
 
 export const Header = () => {
     const { getTodoCount, getDoneCount } = useTodoContext();
     const { currentTheme, toggleTheme } = useThemeContext();
-    const { toggleLanguage, translate } = useLocalizationContext();
+    const { translate } = useLocalizationContext();
 
     const todo = getTodoCount();
     const done = getDoneCount();
@@ -20,11 +21,9 @@ export const Header = () => {
     const typographyColor = getTextColor(currentTheme);
 
     return (
-        <div className={styles.headerContainer}>
+        <div className={styles.header}>
             <div className={styles.headerButtons}>
-                <Button type={buttonType} size="large" onClick={toggleLanguage}>
-                    {translate('changeLanguage')}
-                </Button>
+                <LanguageDropdown />
                 <Button type={buttonType} size="large" onClick={toggleTheme}>
                     {translate('changeTheme')}
                 </Button>

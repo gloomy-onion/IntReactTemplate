@@ -1,0 +1,82 @@
+import React, { useState, useRef, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { Menu, Button, Space } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import styles from './LanguageDropdown.module.scss';
+import { useLocalizationContext } from '../../context/LocalizationContext';
+import { getButtonType } from '../../shared/lib/utils/themeUtils';
+import { useThemeContext } from '../../context/ThemeContext';
+
+export const LanguageDropdown = () => {
+    const { setLanguage, translate } = useLocalizationContext();
+    const { currentTheme } = useThemeContext();
+    const buttonType = getButtonType(currentTheme);
+
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
+
+    const items = [
+        {
+            key: 'ru',
+            label: 'Русский',
+            onClick: () => {
+                setLanguage('ru');
+                setDropdownVisible(false);
+            },
+        },
+        {
+            key: 'en',
+            label: 'English',
+            onClick: () => {
+                setLanguage('en');
+                setDropdownVisible(false);
+            },
+        },
+    ];
+
+    useEffect(() => {
+        if (buttonRef.current) {
+            const rect = buttonRef.current.getBoundingClientRect();
+            setPosition({
+                top: rect.bottom + window.scrollY,
+                left: rect.left + window.scrollX,
+            });
+        }
+    }, [dropdownVisible]);
+
+    const dropdownContent = (
+        <div
+            className={styles.dropdownContent}
+            style={{
+                position: 'absolute',
+                top: `${position?.top}px`,
+                left: `${position?.left}px`,
+                display: dropdownVisible ? 'block' : 'none',
+            }}
+        >
+            <Menu items={items} onClick={() => setDropdownVisible(false)} />
+        </div>
+    );
+
+    return (
+        <>
+            <Button
+                className={styles.dropdownButton}
+                size="large"
+                type={buttonType}
+                onClick={(e) => {
+                    e.preventDefault();
+                    setDropdownVisible((prev) => !prev);
+                }}
+                ref={buttonRef}
+            >
+                <Space>
+                    {translate('changeLanguage')}
+                    <DownOutlined />
+                </Space>
+            </Button>
+            {dropdownVisible && ReactDOM.createPortal(dropdownContent, document.body)}
+        </>
+    );
+};

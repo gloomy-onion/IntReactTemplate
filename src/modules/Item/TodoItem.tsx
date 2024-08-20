@@ -31,10 +31,15 @@ export const TodoItem = ({
     const typographyColor = getTextColor(currentTheme);
 
     return (
-        <div className={styles.todoItemContainer}>
+        <div className={styles.todoItem}>
             <Checkbox checked={isDone} onChange={() => onToggleDone(id)} />
             <Typography.Text
-                className={cn(isDone ? styles.todoItemDone : '', themeStyles[typographyColor])}
+                className={cn(
+                    {
+                        [styles.todoItemDone]: isDone,
+                    },
+                    themeStyles[typographyColor],
+                )}
                 style={{ fontSize: 20, cursor: 'pointer' }}
                 onClick={() => onToggleDone(id)}
             >

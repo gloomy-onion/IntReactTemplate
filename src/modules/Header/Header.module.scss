@@ -1,8 +1,9 @@
-.headerContainer {
+.header {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
+  position: relative;
 }
 
 .headerTitles {
@@ -11,6 +12,34 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
+
+  .header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+  }
+
+  .headerTitles {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .taskCount.taskCount {
+    margin-bottom: 19px;
+  }
+
+  .headerButtons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+  }
 }
 
 .taskCount.taskCount {
