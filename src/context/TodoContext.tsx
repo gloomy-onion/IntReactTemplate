@@ -42,19 +42,26 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
 
     const toggleDone = (id: string) => {
         setItems((prev) =>
-            prev.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)),);
+            prev.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)),
+        );
     };
 
     const toggleImportant = (id: string) => {
         setItems((prev) =>
-            prev.map((item) =>
-                (item.id === id ? { ...item, isImportant: !item.isImportant } : item),),);
+            prev.map((item) => {
+                if (item.id === id) {
+                    return { ...item, isImportant: !item.isImportant };
+                }
+
+                return item;
+            }),
+        );
     };
-    //тут линтер сам себе противоречит и чудит
 
     const filteredItems = items.filter((item) =>
         item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()),
     );
+
     const filteredCategoryResult =
         categories === 'all'
             ? filteredItems

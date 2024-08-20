@@ -1,15 +1,19 @@
+import React from 'react';
 import { List } from 'antd';
 import { TodoItem } from '../Item';
 import styles from './TodoList.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
 
 export const TodoList = () => {
-    const { deleteTodo, toggleDone, toggleImportant, filteredItems } = useTodoContext();
+    const { items, deleteTodo, toggleDone, toggleImportant, filteredItems, searchValue } =
+        useTodoContext();
+
+    const resultItems = !filteredItems.length && !searchValue ? items : filteredItems;
 
     return (
         <List
-            className={styles.todoList}
-            dataSource={filteredItems}
+            className={styles.listContainer}
+            dataSource={resultItems}
             renderItem={(item) => (
                 <List.Item>
                     <TodoItem
