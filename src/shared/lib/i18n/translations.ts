@@ -59,4 +59,8 @@ export const i18n: Translations = {
         ru: 'Отмена',
         en: 'Cancel',
     },
+    importantTooltip: {
+        ru: 'Добавить в важные',
+        en: 'Add to important',
+    },
 };
