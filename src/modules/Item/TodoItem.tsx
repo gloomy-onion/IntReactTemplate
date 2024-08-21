@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Checkbox, Typography } from 'antd';
 import { DeleteTwoTone, FireTwoTone } from '@ant-design/icons';
 import cn from 'classnames';
+import { createPortal } from 'react-dom';
 import styles from './TodoItem.module.scss';
 import { useThemeContext } from '../../context/ThemeContext';
 import { getTextColor } from '../../shared/lib/utils/themeUtils';
 import themeStyles from '../../shared/lib/styles/Theme.module.scss';
+import { ConfirmDelete } from '../ConfirmDelete';
 
 type TodoItemProps = {
     itemLabel: string;
@@ -27,6 +29,16 @@ export const TodoItem = ({
     id,
 }: TodoItemProps) => {
     const { currentTheme } = useThemeContext();
+    const [open, setOpen] = useState<boolean>(false);
+
+    const showModal = () => setOpen(true);
+
+    const handleCancel = () => setOpen(false);
+
+    const handleDelete = () => {
+        onDelete(id);
+        setOpen(false);
+    };
 
     const typographyColor = getTextColor(currentTheme);
 
@@ -49,12 +61,21 @@ export const TodoItem = ({
                 <FireTwoTone
                     twoToneColor={isImportant ? '#ffA500' : '#ccc'}
                     onClick={() => onToggleImportant(id)}
-                    className={styles.todoItemIcons}
+                    className={styles.todoIcons}
                 />
                 <DeleteTwoTone
-                    className={cn(styles.deleteButton, styles.todoItemIcons)}
-                    onClick={() => onDelete(id)}
+                    className={cn(styles.deleteButton, styles.todoIcons)}
+                    onClick={showModal}
                 />
+                {open &&
+                    createPortal(
+                        <ConfirmDelete
+                            open={open}
+                            handleCancel={handleCancel}
+                            handleOk={handleDelete}
+                        />,
+                        document.body,
+                    )}
             </div>
         </div>
     );

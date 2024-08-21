@@ -43,4 +43,20 @@ export const i18n: Translations = {
         ru: 'Выполненные',
         en: 'Done',
     },
+    confirmDelete: {
+        ru: 'Вы действительно хотите удалить задачу?',
+        en: 'Are you sure you want to delete the task?',
+    },
+    confirmDeleteTitle: {
+        ru: 'Подтвердите удаление',
+        en: 'Confirm delete',
+    },
+    confirm: {
+        ru: 'Подтвердить',
+        en: 'Confirm',
+    },
+    cancel: {
+        ru: 'Отмена',
+        en: 'Cancel',
+    },
 };

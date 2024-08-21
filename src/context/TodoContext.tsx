@@ -4,9 +4,6 @@ type TodoItem = {
     itemLabel: string;
     isImportant: boolean;
     isDone: boolean;
-    onToggleDone: (id: string) => void;
-    onToggleImportant: (id: string) => void;
-    onDelete: (itemId: string) => void;
     id: string;
 };
 
@@ -18,13 +15,13 @@ type TodoContextType = {
     deleteTodo: (id: string) => void;
     toggleDone: (id: string) => void;
     toggleImportant: (id: string) => void;
-    searchTodo: (searchValue: string) => void;
+    setSearchValue: (value: string) => void;
     filteredItems: TodoItem[];
     searchValue: string;
     categories: Categories;
     setCategories: (categories: Categories) => void;
-    getDoneCount: () => number;
-    getTodoCount: () => number;
+    done: number;
+    todo: number;
 };
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
@@ -37,28 +34,36 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
 
     const addTodo = (newTodo: Omit<TodoItem, 'id'>) => {
         const todoWithId: TodoItem = { ...newTodo, id: idCounter.toString() };
-        setItems([...items, todoWithId]);
+        setItems((prev) => [...prev, todoWithId]);
         setIdCounter(idCounter + 1);
     };
 
     const deleteTodo = (id: string) => {
-        setItems(items.filter((item) => item.id !== id));
+        setItems((prev) => prev.filter((item) => item.id !== id));
     };
 
     const toggleDone = (id: string) => {
-        setItems(items.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)));
-    };
+        setItems((prev) =>
+            prev.map((item) => {
+                if (item.id === id) {
+                    return { ...item, isDone: !item.isDone };
+                }
 
-    const toggleImportant = (id: string) => {
-        setItems(
-            items.map((item) =>
-                (item.id === id ? { ...item, isImportant: !item.isImportant } : item),
-            ),
+                return item;
+            }),
         );
     };
 
-    const searchTodo = (searchValue: string) => {
-        setSearchValue(searchValue);
+    const toggleImportant = (id: string) => {
+        setItems((prev) =>
+            prev.map((item) => {
+                if (item.id === id) {
+                    return { ...item, isImportant: !item.isImportant };
+                }
+
+                return item;
+            }),
+        );
     };
 
     const filteredItems = items.filter(
@@ -73,8 +78,8 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             ? filteredItems.filter((item) => !item.isDone)
             : filteredItems.filter((item) => item.isDone);
 
-    const getDoneCount = () => items.filter((item) => item.isDone).length;
-    const getTodoCount = () => items.filter((item) => !item.isDone).length;
+    const done = items.filter((item) => item.isDone).length;
+    const todo = items.length - done;
 
     const value = useMemo(
         () => ({
@@ -83,13 +88,13 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             deleteTodo,
             toggleDone,
             toggleImportant,
-            searchTodo,
+            setSearchValue,
             filteredItems: filteredCategoryResult,
             searchValue,
             categories,
             setCategories,
-            getTodoCount,
-            getDoneCount,
+            todo,
+            done,
         }),
         [
             items,
@@ -97,13 +102,13 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             deleteTodo,
             toggleDone,
             toggleImportant,
-            searchTodo,
+            setSearchValue,
             filteredCategoryResult,
             searchValue,
             categories,
             setCategories,
-            getTodoCount,
-            getDoneCount,
+            todo,
+            done,
         ],
     );
 

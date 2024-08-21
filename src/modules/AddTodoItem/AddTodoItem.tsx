@@ -21,9 +21,6 @@ export const AddTodoItem = () => {
                 itemLabel: newTask,
                 isImportant: false,
                 isDone: false,
-                onToggleDone: () => {},
-                onToggleImportant: () => {},
-                onDelete: () => {},
             });
             setNewTask('');
         }

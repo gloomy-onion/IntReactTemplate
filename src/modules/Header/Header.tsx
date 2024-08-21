@@ -10,12 +10,9 @@ import { useLocalizationContext } from '../../context/LocalizationContext';
 import { LanguageDropdown } from '../LanguageDropdown';
 
 export const Header = () => {
-    const { getTodoCount, getDoneCount } = useTodoContext();
+    const { todo, done } = useTodoContext();
     const { currentTheme, toggleTheme } = useThemeContext();
     const { translate } = useLocalizationContext();
-
-    const todo = getTodoCount();
-    const done = getDoneCount();
 
     const buttonType = getButtonType(currentTheme);
     const typographyColor = getTextColor(currentTheme);

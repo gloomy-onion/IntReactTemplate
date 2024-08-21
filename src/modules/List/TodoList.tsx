@@ -5,15 +5,12 @@ import styles from './TodoList.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
 
 export const TodoList = () => {
-    const { items, deleteTodo, toggleDone, toggleImportant, filteredItems, searchValue } =
-        useTodoContext();
-
-    const resultItems = !filteredItems.length && !searchValue ? items : filteredItems;
+    const { deleteTodo, toggleDone, toggleImportant, filteredItems } = useTodoContext();
 
     return (
         <List
             className={styles.list}
-            dataSource={resultItems}
+            dataSource={filteredItems}
             renderItem={(item) => (
                 <List.Item>
                     <TodoItem
