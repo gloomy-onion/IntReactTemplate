@@ -1,6 +1,9 @@
 import React from 'react';
 import { Tabs } from 'antd';
 import { Categories, useTodoContext } from '../../context/TodoContext';
+import { useThemeContext } from '../../context/ThemeContext';
+import { getTabColor } from '../../shared/lib/utils/themeUtils';
+import themeStyles from '../../shared/lib/styles/Theme.module.scss';
 
 type TabItem = {
     key: string;
@@ -28,6 +31,9 @@ const items: TabItem[] = [
 
 export const TodoFilter = () => {
     const { categories, setCategories } = useTodoContext();
+    const { currentTheme } = useThemeContext();
+
+    const tabColor = getTabColor(currentTheme);
 
     const onChange = (key: string) => {
         setCategories(key as Categories);
@@ -35,6 +41,7 @@ export const TodoFilter = () => {
 
     return (
         <Tabs
+            className={themeStyles[tabColor]}
             activeKey={categories}
             centered
             onChange={onChange}

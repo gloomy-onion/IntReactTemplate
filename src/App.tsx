@@ -1,8 +1,11 @@
 import { MainPage } from './pages/MainPage';
 import { TodoProvider } from './context/TodoContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 export const App = () => (
-    <TodoProvider>
-        <MainPage />
-    </TodoProvider>
+    <ThemeProvider>
+        <TodoProvider>
+            <MainPage />
+        </TodoProvider>
+    </ThemeProvider>
 );

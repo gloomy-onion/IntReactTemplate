@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 
 type TodoItem = {
     itemLabel: string;
@@ -72,32 +72,44 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
     const done = items.filter((item) => item.isDone).length;
     const todo = items.filter((item) => !item.isDone).length;
 
-    return (
-        <TodoContext.Provider
-            value={{
-                items,
-                addTodo,
-                deleteTodo,
-                toggleDone,
-                toggleImportant,
-                setSearchValue,
-                filteredItems: filteredCategoryResult,
-                searchValue,
-                categories,
-                setCategories,
-                todo,
-                done,
-            }}
-        >
-            {children}
-        </TodoContext.Provider>
+    const value = useMemo(
+        () => ({
+            items,
+            addTodo,
+            deleteTodo,
+            toggleDone,
+            toggleImportant,
+            filteredItems: filteredCategoryResult,
+            searchValue,
+            categories,
+            setCategories,
+            todo,
+            done,
+            setSearchValue,
+        }),
+        [
+            items,
+            addTodo,
+            deleteTodo,
+            toggleDone,
+            toggleImportant,
+            filteredCategoryResult,
+            searchValue,
+            categories,
+            setCategories,
+            todo,
+            done,
+            setSearchValue,
+        ],
     );
+
+    return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 };
 
 export const useTodoContext = (): TodoContextType => {
     const context = useContext(TodoContext);
     if (!context) {
-        throw new Error('useTodoContext должен быть внутри TodoProvider');
+        throw new Error('useTodoContext should be inside TodoProvider');
     }
 
     return context;
