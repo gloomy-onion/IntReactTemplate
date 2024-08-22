@@ -9,12 +9,9 @@ import themeStyles from '../../shared/lib/styles/Theme.module.scss';
 import { useLocalizationContext } from '../../context/LocalizationContext';
 
 export const Header = () => {
-    const { getTodoCount, getDoneCount } = useTodoContext();
+    const { todo, done } = useTodoContext();
     const { currentTheme, toggleTheme } = useThemeContext();
     const { toggleLanguage, translate } = useLocalizationContext();
-
-    const todo = getTodoCount();
-    const done = getDoneCount();
 
     const buttonType = getButtonType(currentTheme);
     const typographyColor = getTextColor(currentTheme);

@@ -15,7 +15,7 @@ export const MainPage = () => {
 
     return (
         <div className={themeStyles[backgroundColor]}>
-            <main className={styles.mainPageContainer}>
+            <main className={styles.mainPage}>
                 <Header />
                 <Search />
                 <TodoFilter />

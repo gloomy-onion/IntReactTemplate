@@ -21,16 +21,13 @@ export const AddTodoItem = () => {
                 itemLabel: newTask,
                 isImportant: false,
                 isDone: false,
-                onToggleDone: () => {},
-                onToggleImportant: () => {},
-                onDelete: () => {},
             });
             setNewTask('');
         }
     };
 
     return (
-        <form className={styles.addTodoItemContainer}>
+        <form className={styles.addTodoItem}>
             <Input size="large" value={newTask} onChange={(e) => setNewTask(e.target.value)} />
             <Button type={buttonType} size="large" onClick={handleAddTodo}>
                 {translate('addTask')}
