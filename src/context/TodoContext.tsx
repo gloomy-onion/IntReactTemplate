@@ -109,7 +109,7 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
 export const useTodoContext = (): TodoContextType => {
     const context = useContext(TodoContext);
     if (!context) {
-        throw new Error('useTodoContext должен быть внутри TodoProvider');
+        throw new Error('useTodoContext should be inside TodoProvider');
     }
 
     return context;

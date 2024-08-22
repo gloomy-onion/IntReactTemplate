@@ -39,35 +39,6 @@ export const TodoFilter = () => {
         setCategories(key as Categories);
     };
 
-    // useEffect(() => {
-    //     console.log('useEffect: Тело эффекта');
-    //
-    //     return () => {
-    //         console.log('useEffect: Cleanup');
-    //     };
-    // }, [categories]);
-    //
-    // useLayoutEffect(() => {
-    //     console.log('useLayoutEffect: Тело эффекта');
-    //
-    //     return () => {
-    //         console.log('useLayoutEffect: Cleanup');
-    //     };
-    // }, [categories]);
-    //
-
-    // наскальные заметки для себя
-    // useLayoutEffect: Тело эффекта
-    // useEffect: Тело эффекта
-    // useLayoutEffect: Cleanup
-    // useEffect: Cleanup
-    // useLayoutEffect: Тело эффекта
-    // useEffect: Тело эффекта
-    // смутило то, что после отрисовки сразу очищается, это из-за React.StrictMode
-    // React намеренно вызывает эффекты и функции очистки дважды при первоначальной отрисовке,
-    // чтобы помочь разработчикам выявлять побочные эффекты и убедиться, что код устойчив к перерендерам
-    // проверила, без стриктмод работает нормально
-
     return (
         <Tabs
             className={themeStyles[tabColor]}

@@ -1,24 +1,20 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 
 type ThemeContextType = {
     currentTheme: string;
-    toggleTheme: () => void;
+    toggleTheme?: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>({
     currentTheme: 'light',
-    toggleTheme: () => {},
 });
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [theme, setTheme] = useState('light');
 
-    const toggleTheme = useMemo(
-        () => () => {
-            setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-        },
-        [],
-    );
+    const toggleTheme = useCallback(() => {
+        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    }, []);
 
     const value = useMemo(
         () => ({
@@ -34,7 +30,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 export const useThemeContext = (): ThemeContextType => {
     const context = useContext(ThemeContext);
     if (!context) {
-        throw new Error('useThemeContext должен быть внутри ThemeProvider');
+        throw new Error('useThemeContext should be inside ThemeProvider');
     }
 
     return context;

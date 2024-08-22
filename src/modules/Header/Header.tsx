@@ -15,7 +15,7 @@ export const Header = () => {
     const typographyColor = getTextColor(currentTheme);
 
     return (
-        <div className={styles.headerContainer}>
+        <div className={styles.header}>
             <Button type={buttonType} size="large" onClick={toggleTheme}>
                 Change theme
             </Button>
