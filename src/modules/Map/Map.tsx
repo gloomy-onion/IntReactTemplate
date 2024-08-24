@@ -3,7 +3,6 @@ import { Modal } from 'antd';
 import { Loading } from '../Loading';
 import { useLocalizationContext } from '../../context/LocalizationContext';
 import styles from './Map.module.scss';
-import MapImage from './MapImage';
 
 type MapProps = {
     open: boolean;
