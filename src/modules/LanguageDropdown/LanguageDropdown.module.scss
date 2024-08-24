@@ -1,3 +1,9 @@
 .dropdownContent {
   width: 180px;
+  position: absolute;
+  display: none;
+}
+
+.visible {
+  display: block;
 }

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Menu, Button, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import cn from 'classnames';
 import styles from './LanguageDropdown.module.scss';
 import { useLocalizationContext } from '../../context/LocalizationContext';
 import { getButtonType } from '../../shared/lib/utils/themeUtils';
@@ -47,12 +48,10 @@ export const LanguageDropdown = () => {
 
     const dropdownContent = (
         <div
-            className={styles.dropdownContent}
+            className={cn(styles.dropdownContent, { [styles.visible]: dropdownVisible })}
             style={{
-                position: 'absolute',
                 top: `${position?.top}px`,
                 left: `${position?.left}px`,
-                display: dropdownVisible ? 'block' : 'none',
             }}
         >
             <Menu items={items} onClick={() => setDropdownVisible(false)} />

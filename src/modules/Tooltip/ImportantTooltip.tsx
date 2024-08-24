@@ -11,9 +11,5 @@ export const ImportantTooltip = ({ children }: ImportantTooltipProps) => {
 
     const text = translate('importantTooltip');
 
-    return (
-        <div>
-            <Tooltip title={text}>{children}</Tooltip>
-        </div>
-    );
+    return <Tooltip title={text}>{children}</Tooltip>;
 };

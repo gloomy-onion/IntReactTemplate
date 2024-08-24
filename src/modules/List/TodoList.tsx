@@ -9,7 +9,7 @@ export const TodoList = () => {
 
     return (
         <List
-            className={styles.list}
+            className={styles.todoList}
             dataSource={filteredItems}
             renderItem={(item) => (
                 <List.Item>

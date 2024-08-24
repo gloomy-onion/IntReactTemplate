@@ -15,7 +15,7 @@ type TodoContextType = {
     deleteTodo: (id: string) => void;
     toggleDone: (id: string) => void;
     toggleImportant: (id: string) => void;
-    setSearchValue: (value: string) => void;
+    setSearchValue: (searchValue: string) => void;
     filteredItems: TodoItem[];
     searchValue: string;
     categories: Categories;
@@ -28,14 +28,12 @@ const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
 export const TodoProvider = ({ children }: { children: ReactNode }) => {
     const [items, setItems] = useState<TodoItem[]>([]);
-    const [idCounter, setIdCounter] = useState<number>(1);
     const [searchValue, setSearchValue] = useState<string>('');
     const [categories, setCategories] = useState<Categories>('all');
 
     const addTodo = (newTodo: Omit<TodoItem, 'id'>) => {
-        const todoWithId: TodoItem = { ...newTodo, id: idCounter.toString() };
+        const todoWithId: TodoItem = { ...newTodo, id: Date.now().toString() };
         setItems((prev) => [...prev, todoWithId]);
-        setIdCounter(idCounter + 1);
     };
 
     const deleteTodo = (id: string) => {
@@ -44,13 +42,7 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
 
     const toggleDone = (id: string) => {
         setItems((prev) =>
-            prev.map((item) => {
-                if (item.id === id) {
-                    return { ...item, isDone: !item.isDone };
-                }
-
-                return item;
-            }),
+            prev.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)),
         );
     };
 
@@ -66,9 +58,8 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
         );
     };
 
-    const filteredItems = items.filter(
-        (item) =>
-            item.itemLabel && item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()),
+    const filteredItems = items.filter((item) =>
+        item.itemLabel.toLowerCase().includes(searchValue.toLowerCase()),
     );
 
     const filteredCategoryResult =
@@ -79,7 +70,7 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             : filteredItems.filter((item) => item.isDone);
 
     const done = items.filter((item) => item.isDone).length;
-    const todo = items.length - done;
+    const todo = items.filter((item) => !item.isDone).length;
 
     const value = useMemo(
         () => ({
@@ -88,13 +79,13 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             deleteTodo,
             toggleDone,
             toggleImportant,
-            setSearchValue,
             filteredItems: filteredCategoryResult,
             searchValue,
             categories,
             setCategories,
             todo,
             done,
+            setSearchValue,
         }),
         [
             items,
@@ -102,13 +93,13 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
             deleteTodo,
             toggleDone,
             toggleImportant,
-            setSearchValue,
             filteredCategoryResult,
             searchValue,
             categories,
             setCategories,
             todo,
             done,
+            setSearchValue,
         ],
     );
 
@@ -118,7 +109,7 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
 export const useTodoContext = (): TodoContextType => {
     const context = useContext(TodoContext);
     if (!context) {
-        throw new Error('useTodoContext должен быть внутри TodoProvider');
+        throw new Error('useTodoContext should be inside TodoProvider');
     }
 
     return context;
