@@ -63,4 +63,12 @@ export const i18n: Translations = {
         ru: 'Добавить в важные',
         en: 'Add to important',
     },
+    openMap: {
+        ru: 'Открыть карту',
+        en: 'Open map',
+    },
+    map: {
+        ru: 'Я карта',
+        en: 'Map',
+    },
 };
