@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
 import { i18n, Language } from '../shared/lib/i18n/translations';
 
 type LocalizationContextType = {
@@ -12,23 +12,19 @@ const LocalizationContext = createContext<LocalizationContextType | undefined>(u
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     const [language, setLanguage] = useState<Language>('en');
 
-    const toggleLanguage = useMemo(
-        () => () => {
-            setLanguage((prevLanguage) => (prevLanguage === 'en' ? 'ru' : 'en'));
+    const toggleLanguage = useCallback(() => {
+        setLanguage((prevLanguage) => (prevLanguage === 'en' ? 'ru' : 'en'));
+    }, []);
+
+    const translate = useCallback(
+        (key: string): string => {
+            const translation = i18n[key];
+            if (translation) {
+                return translation[language] || key;
+            }
+
+            return key;
         },
-        [],
-    );
-
-    const translate = useMemo(
-        () =>
-            (key: string): string => {
-                const translation = i18n[key];
-                if (translation) {
-                    return translation[language] || key;
-                }
-
-                return key;
-            },
         [language],
     );
 
