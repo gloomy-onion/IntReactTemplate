@@ -1,11 +1,14 @@
 import { MainPage } from './pages/MainPage';
 import { TodoProvider } from './context/TodoContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { LocalizationProvider } from './context/LocalizationContext';
 
 export const App = () => (
     <ThemeProvider>
-        <TodoProvider>
-            <MainPage />
-        </TodoProvider>
+        <LocalizationProvider>
+            <TodoProvider>
+                <MainPage />
+            </TodoProvider>
+        </LocalizationProvider>
     </ThemeProvider>
 );

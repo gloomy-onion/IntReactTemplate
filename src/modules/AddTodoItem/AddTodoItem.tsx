@@ -4,12 +4,14 @@ import styles from './AddTodoItem.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
 import { getButtonType } from '../../shared/lib/utils/themeUtils';
 import { useThemeContext } from '../../context/ThemeContext';
+import { useLocalizationContext } from '../../context/LocalizationContext';
 
 export const AddTodoItem = () => {
-    const { addTodo } = useTodoContext();
     const [newTask, setNewTask] = useState('');
 
+    const { addTodo } = useTodoContext();
     const { currentTheme } = useThemeContext();
+    const { translate } = useLocalizationContext();
 
     const buttonType = getButtonType(currentTheme);
 
@@ -28,7 +30,7 @@ export const AddTodoItem = () => {
         <form className={styles.addTodoItem}>
             <Input size="large" value={newTask} onChange={(e) => setNewTask(e.target.value)} />
             <Button type={buttonType} size="large" onClick={handleAddTodo}>
-                Add
+                {translate('addTask')}
             </Button>
         </form>
     );
