@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Button, Input } from 'antd';
+import { useUnit } from 'effector-react';
 import styles from './AddTodoItem.module.scss';
-import { useTodoContext } from '../../context/TodoContext';
 import { getButtonType } from '../../shared/lib/utils/themeUtils';
 import { useThemeContext } from '../../context/ThemeContext';
 import { useLocalizationContext } from '../../context/LocalizationContext';
+import { addTodoFx } from '../../shared/api/todos';
 
 export const AddTodoItem = () => {
     const [newTask, setNewTask] = useState('');
-
-    const { addTodo } = useTodoContext();
+    const addTodo = useUnit(addTodoFx);
     const { currentTheme } = useThemeContext();
     const { translate } = useLocalizationContext();
 
@@ -18,10 +18,12 @@ export const AddTodoItem = () => {
     const handleAddTodo = () => {
         if (newTask) {
             addTodo({
-                itemLabel: newTask,
+                title: newTask,
                 isImportant: false,
-                isDone: false,
+                completed: false,
+                userId: '',
             });
+
             setNewTask('');
         }
     };

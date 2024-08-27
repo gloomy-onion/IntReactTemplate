@@ -11,7 +11,6 @@ export type Categories = 'all' | 'active' | 'done';
 
 type TodoContextType = {
     items: TodoItem[];
-    addTodo: (newTodo: Omit<TodoItem, 'id'>) => void;
     deleteTodo: (id: string) => void;
     toggleDone: (id: string) => void;
     toggleImportant: (id: string) => void;
@@ -30,11 +29,6 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
     const [items, setItems] = useState<TodoItem[]>([]);
     const [searchValue, setSearchValue] = useState<string>('');
     const [categories, setCategories] = useState<Categories>('all');
-
-    const addTodo = (newTodo: Omit<TodoItem, 'id'>) => {
-        const todoWithId: TodoItem = { ...newTodo, id: Date.now().toString() };
-        setItems((prev) => [...prev, todoWithId]);
-    };
 
     const deleteTodo = (id: string) => {
         setItems((prev) => prev.filter((item) => item.id !== id));
@@ -75,7 +69,6 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
     const value = useMemo(
         () => ({
             items,
-            addTodo,
             deleteTodo,
             toggleDone,
             toggleImportant,
@@ -89,7 +82,6 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
         }),
         [
             items,
-            addTodo,
             deleteTodo,
             toggleDone,
             toggleImportant,
