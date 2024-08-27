@@ -2,10 +2,10 @@ import { createEffect, createStore } from 'effector';
 import { apiInstance } from './base';
 
 type TodoItem = {
-    isImportant: boolean;
-    id: string;
+    isImportant?: boolean;
+    id: string | number;
     title: string;
-    userId: string;
+    userId: string | number;
     completed: boolean;
 };
 
