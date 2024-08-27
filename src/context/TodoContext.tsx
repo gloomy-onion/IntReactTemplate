@@ -4,16 +4,16 @@ type TodoItem = {
     itemLabel: string;
     isImportant: boolean;
     isDone: boolean;
-    id: string;
+    id: string | number;
 };
 
 export type Categories = 'all' | 'active' | 'done';
 
 type TodoContextType = {
     items: TodoItem[];
-    deleteTodo: (id: string) => void;
-    toggleDone: (id: string) => void;
-    toggleImportant: (id: string) => void;
+    deleteTodo: (id: string | number) => void;
+    toggleDone: (id: string | number) => void;
+    toggleImportant: (id: string | number) => void;
     setSearchValue: (searchValue: string) => void;
     filteredItems: TodoItem[];
     searchValue: string;
@@ -30,17 +30,17 @@ export const TodoProvider = ({ children }: { children: ReactNode }) => {
     const [searchValue, setSearchValue] = useState<string>('');
     const [categories, setCategories] = useState<Categories>('all');
 
-    const deleteTodo = (id: string) => {
+    const deleteTodo = (id: string | number) => {
         setItems((prev) => prev.filter((item) => item.id !== id));
     };
 
-    const toggleDone = (id: string) => {
+    const toggleDone = (id: string | number) => {
         setItems((prev) =>
             prev.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)),
         );
     };
 
-    const toggleImportant = (id: string) => {
+    const toggleImportant = (id: string | number) => {
         setItems((prev) =>
             prev.map((item) => {
                 if (item.id === id) {
