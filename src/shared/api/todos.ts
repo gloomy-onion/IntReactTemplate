@@ -1,4 +1,5 @@
 import { createEffect, createStore } from 'effector';
+import { createGate } from 'effector-react';
 import { apiInstance } from './base';
 
 type TodoItem = {
@@ -11,10 +12,16 @@ type TodoItem = {
 
 const BASE_URL = '/todos';
 
+export const fetchTodoGate = createGate();
+
 export const fetchTodosFx = createEffect(async () => {
     const response = await apiInstance.get<TodoItem[]>(BASE_URL);
 
     return response.data;
+});
+
+fetchTodoGate.open.watch(() => {
+    fetchTodosFx();
 });
 
 export const addTodoFx = createEffect(async (newTodo: Omit<TodoItem, 'id'>) => {

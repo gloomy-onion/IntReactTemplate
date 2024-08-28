@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { List } from 'antd';
-import { useList, useUnit } from 'effector-react';
+import { useGate, useList } from 'effector-react';
 import { TodoItem } from '../Item';
 import styles from './TodoList.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
-import { $todos, fetchTodosFx } from '../../shared/api/todos';
+import { $todos, fetchTodoGate } from '../../shared/api/todos';
 
 export const TodoList = () => {
     const { deleteTodo, toggleDone, toggleImportant } = useTodoContext();
-    const fetchTodos = useUnit(fetchTodosFx);
 
-    useEffect(() => {
-        fetchTodos();
-    }, [fetchTodos]);
+    useGate(fetchTodoGate);
 
     return (
         <List className={styles.todoList}>
