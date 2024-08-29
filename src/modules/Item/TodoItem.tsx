@@ -12,7 +12,7 @@ import { ImportantTooltip } from '../Tooltip';
 
 type TodoItemProps = {
     itemLabel: string;
-    isImportant: boolean | undefined;
+    isImportant?: boolean;
     isDone: boolean;
     onToggleDone: (id: string | number) => void;
     onToggleImportant: (id: string | number) => void;

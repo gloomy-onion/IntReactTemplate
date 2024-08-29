@@ -5,11 +5,11 @@ import styles from './AddTodoItem.module.scss';
 import { getButtonType } from '../../shared/lib/utils/themeUtils';
 import { useThemeContext } from '../../context/ThemeContext';
 import { useLocalizationContext } from '../../context/LocalizationContext';
-import { addTodoFx } from '../../shared/api/todos';
+import { model } from '../../shared/api/todos';
 
 export const AddTodoItem = () => {
     const [newTask, setNewTask] = useState('');
-    const addTodo = useUnit(addTodoFx);
+    const addNewTodo = useUnit(model.addTodo);
     const { currentTheme } = useThemeContext();
     const { translate } = useLocalizationContext();
 
@@ -17,7 +17,7 @@ export const AddTodoItem = () => {
 
     const handleAddTodo = () => {
         if (newTask) {
-            addTodo({
+            addNewTodo({
                 title: newTask,
                 isImportant: false,
                 completed: false,

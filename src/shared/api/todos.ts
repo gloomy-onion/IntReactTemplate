@@ -1,35 +1,50 @@
-import { createEffect, createStore } from 'effector';
+import { createEffect, createEvent, createStore, sample } from 'effector';
 import { createGate } from 'effector-react';
-import { apiInstance } from './base';
+import { TodoItem } from '../types/todo';
+import { todosRequests } from './base';
 
-type TodoItem = {
-    isImportant?: boolean;
-    id: string | number;
-    title: string;
-    userId: string | number;
-    completed: boolean;
-};
+const fetchTodoGate = createGate();
+const fetchTodos = createEvent();
+const addTodo = createEvent<Omit<TodoItem, 'id'>>();
 
-const BASE_URL = '/todos';
-
-export const fetchTodoGate = createGate();
-
-export const fetchTodosFx = createEffect(async () => {
-    const response = await apiInstance.get<TodoItem[]>(BASE_URL);
+const fetchTodosFx = createEffect(async () => {
+    const response = await todosRequests.getTodos();
 
     return response.data;
 });
 
-fetchTodoGate.open.watch(() => {
-    fetchTodosFx();
-});
-
-export const addTodoFx = createEffect(async (newTodo: Omit<TodoItem, 'id'>) => {
-    const response = await apiInstance.post<TodoItem>(BASE_URL, newTodo);
+const addTodoFx = createEffect(async (newTodo: Omit<TodoItem, 'id'>) => {
+    const response = await todosRequests.postTodo(newTodo);
 
     return response.data;
 });
 
-export const $todos = createStore<TodoItem[]>([])
+const $todos = createStore<TodoItem[]>([])
     .on(fetchTodosFx.doneData, (_, todos) => todos)
     .on(addTodoFx.doneData, (prev, newTodo) => [...prev, newTodo]);
+
+sample({
+    clock: fetchTodoGate.open,
+    target: fetchTodos,
+});
+
+sample({
+    clock: fetchTodos,
+    target: fetchTodosFx,
+});
+
+sample({
+    clock: fetchTodosFx.doneData,
+    target: $todos,
+});
+
+sample({
+    clock: addTodo,
+    target: addTodoFx,
+});
+
+export const model = {
+    fetchTodoGate,
+    addTodo,
+    $todos,
+};
