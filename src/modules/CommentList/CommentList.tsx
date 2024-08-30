@@ -2,18 +2,16 @@ import React from 'react';
 import { List } from 'antd';
 import { useGate, useList } from 'effector-react';
 import { TodoItem } from '../Item';
-import styles from './TodoList.module.scss';
+import styles from './CommentList.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
-import { model } from '../../shared/api/todos';
+import { commentModel } from '../../shared/api/todos';
 
-export const TodoList = () => {
+export const CommentList = () => {
     const { deleteTodo, toggleDone, toggleImportant } = useTodoContext();
-    const todos = useList(model.$todos, (item) => (
+    const comments = useList(commentModel.$items, (item) => (
         <List.Item key={item.id}>
             <TodoItem
-                itemLabel={item.title}
-                isImportant={item.isImportant}
-                isDone={item.completed}
+                itemLabel={item.name}
                 onToggleDone={() => toggleDone(item.id)}
                 onToggleImportant={() => toggleImportant(item.id)}
                 onDelete={() => deleteTodo(item.id)}
@@ -22,7 +20,7 @@ export const TodoList = () => {
         </List.Item>
     ));
 
-    useGate(model.fetchTodoGate);
+    useGate(commentModel.fetchGate);
 
-    return <List className={styles.todoList}>{todos}</List>;
+    return <List className={styles.todoList}>{comments}</List>;
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TodoList } from '../../modules/List';
+import { TodoList } from '../../modules/TodoList';
 import styles from './MainPage.module.scss';
 import { AddTodoItem } from '../../modules/AddTodoItem';
 import { TodoFilter } from '../../modules/TodoFilter';
@@ -8,6 +8,8 @@ import { Search } from '../../modules/Search';
 import { useThemeContext } from '../../context/ThemeContext';
 import { getBackgroundColor } from '../../shared/lib/utils/themeUtils';
 import themeStyles from '../../shared/lib/styles/Theme.module.scss';
+import { CommentList } from '../../modules/CommentList';
+import { AddComment } from '../../modules/AddComment';
 
 export const MainPage = () => {
     const { currentTheme } = useThemeContext();
@@ -19,8 +21,16 @@ export const MainPage = () => {
                 <Header />
                 <Search />
                 <TodoFilter />
-                <TodoList />
-                <AddTodoItem />
+                <section className={styles.mainSection}>
+                    <div>
+                        <CommentList />
+                        <AddComment />
+                    </div>
+                    <div>
+                        <TodoList />
+                        <AddTodoItem />
+                    </div>
+                </section>
             </main>
         </div>
     );

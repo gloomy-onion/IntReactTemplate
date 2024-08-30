@@ -1,50 +1,83 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { createGate } from 'effector-react';
+import { commentsRequests, todosRequests } from './base';
 import { TodoItem } from '../types/todo';
-import { todosRequests } from './base';
+import { CommentType } from '../types/comment';
 
-const fetchTodoGate = createGate();
-const fetchTodos = createEvent();
-const addTodo = createEvent<Omit<TodoItem, 'id'>>();
+interface FetchDataFactoryOptions<T> {
+    request: () => Promise<T[]>;
+    createItem: (item: Omit<T, 'id'>) => Promise<T>;
+    initialData?: T[];
+}
 
-const fetchTodosFx = createEffect(async () => {
-    const response = await todosRequests.getTodos();
+export const createDataModel = <T>({
+    request,
+    createItem,
+    initialData = [],
+}: FetchDataFactoryOptions<T>) => {
+    const fetchGate = createGate();
+    const fetchItems = createEvent();
+    const addItem = createEvent<Omit<T, 'id'>>();
 
-    return response.data;
-});
+    const fetchItemsFx = createEffect(async () => request());
 
-const addTodoFx = createEffect(async (newTodo: Omit<TodoItem, 'id'>) => {
-    const response = await todosRequests.postTodo(newTodo);
+    const addItemFx = createEffect(async (newItem: Omit<T, 'id'>) => createItem(newItem));
 
-    return response.data;
-});
+    const $items = createStore<T[]>(initialData)
+        .on(fetchItemsFx.doneData, (_, items) => items)
+        .on(addItemFx.doneData, (prev, newItem) => [...prev, newItem]);
 
-const $todos = createStore<TodoItem[]>([])
-    .on(fetchTodosFx.doneData, (_, todos) => todos)
-    .on(addTodoFx.doneData, (prev, newTodo) => [...prev, newTodo]);
+    sample({
+        clock: fetchGate.open,
+        target: fetchItems,
+    });
 
-sample({
-    clock: fetchTodoGate.open,
-    target: fetchTodos,
-});
+    sample({
+        clock: fetchItems,
+        target: fetchItemsFx,
+    });
 
-sample({
-    clock: fetchTodos,
-    target: fetchTodosFx,
-});
+    sample({
+        clock: fetchItemsFx.doneData,
+        target: $items,
+    });
 
-sample({
-    clock: fetchTodosFx.doneData,
-    target: $todos,
-});
+    sample({
+        clock: addItem,
+        target: addItemFx,
+    });
 
-sample({
-    clock: addTodo,
-    target: addTodoFx,
-});
-
-export const model = {
-    fetchTodoGate,
-    addTodo,
-    $todos,
+    return {
+        fetchGate,
+        addItem,
+        $items,
+    };
 };
+
+export const todoModel = createDataModel<TodoItem>({
+    request: async () => {
+        const response = await todosRequests.getTodos();
+
+        return response.data;
+    },
+    createItem: async (newTodo) => {
+        const response = await todosRequests.postTodo(newTodo);
+
+        return response.data;
+    },
+});
+
+export const commentModel = createDataModel<CommentType>({
+    request: async () => {
+        const response = await commentsRequests.getComments();
+
+        return response.data;
+    },
+    createItem: async (newComment) => {
+        const response = await commentsRequests.postComments(newComment);
+
+        return response.data;
+    },
+});
+
+export type DataModel<T> = ReturnType<typeof createDataModel>;

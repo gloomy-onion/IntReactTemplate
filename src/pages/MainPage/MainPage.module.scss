@@ -1,5 +1,11 @@
 .mainPage {
-  max-width: 600px;
+  max-width: 1500px;
   padding: 60px;
   margin: 0 auto;
+}
+
+.mainSection{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
