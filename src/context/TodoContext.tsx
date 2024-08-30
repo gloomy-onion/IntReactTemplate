@@ -2,9 +2,9 @@ import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 
 type TodoItem = {
     itemLabel: string;
-    isImportant: boolean;
-    isDone: boolean;
-    id: string | number;
+    isImportant?: boolean;
+    isDone?: boolean;
+    id?: string | number;
 };
 
 export type Categories = 'all' | 'active' | 'done';

@@ -1,14 +1,18 @@
 import React from 'react';
 import { List } from 'antd';
-import { useGate, useList } from 'effector-react';
+import { useGate, useList, useUnit } from 'effector-react';
 import { TodoItem } from '../Item';
 import styles from './TodoList.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
 import { todoModel } from '../../shared/api/todos';
+import { Loading } from '../Loading';
 
 export const TodoList = () => {
     const { deleteTodo, toggleDone, toggleImportant } = useTodoContext();
-    const todos = useList(todoModel.$items, (item) => (
+
+    const { $items, $status, fetchGate } = todoModel;
+    const status = useUnit($status);
+    const todos = useList($items, (item) => (
         <List.Item key={item.id}>
             <TodoItem
                 itemLabel={item.title}
@@ -22,7 +26,11 @@ export const TodoList = () => {
         </List.Item>
     ));
 
-    useGate(todoModel.fetchGate);
+    useGate(fetchGate);
+
+    if (status === 'pending') {
+        return <Loading />;
+    }
 
     return <List className={styles.todoList}>{todos}</List>;
 };

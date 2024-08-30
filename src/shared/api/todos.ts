@@ -1,5 +1,6 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { createGate } from 'effector-react';
+import { status } from 'patronum';
 import { commentsRequests, todosRequests } from './base';
 import { TodoItem } from '../types/todo';
 import { CommentType } from '../types/comment';
@@ -20,6 +21,7 @@ export const createDataModel = <T>({
     const addItem = createEvent<Omit<T, 'id'>>();
 
     const fetchItemsFx = createEffect(async () => request());
+    const $status = status({ effect: fetchItemsFx });
 
     const addItemFx = createEffect(async (newItem: Omit<T, 'id'>) => createItem(newItem));
 
@@ -48,6 +50,7 @@ export const createDataModel = <T>({
     });
 
     return {
+        $status,
         fetchGate,
         addItem,
         $items,
@@ -79,5 +82,3 @@ export const commentModel = createDataModel<CommentType>({
         return response.data;
     },
 });
-
-export type DataModel<T> = ReturnType<typeof createDataModel>;

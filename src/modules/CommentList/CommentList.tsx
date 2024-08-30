@@ -1,14 +1,18 @@
 import React from 'react';
 import { List } from 'antd';
-import { useGate, useList } from 'effector-react';
+import { useGate, useList, useUnit } from 'effector-react';
 import { TodoItem } from '../Item';
 import styles from './CommentList.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
 import { commentModel } from '../../shared/api/todos';
+import { Loading } from '../Loading';
 
 export const CommentList = () => {
     const { deleteTodo, toggleDone, toggleImportant } = useTodoContext();
-    const comments = useList(commentModel.$items, (item) => (
+    const { $items, $status, fetchGate } = commentModel;
+    const status = useUnit($status);
+
+    const comments = useList($items, (item) => (
         <List.Item key={item.id}>
             <TodoItem
                 itemLabel={item.name}
@@ -20,7 +24,10 @@ export const CommentList = () => {
         </List.Item>
     ));
 
-    useGate(commentModel.fetchGate);
+    useGate(fetchGate);
+    if (status === 'pending') {
+        return <Loading />;
+    }
 
     return <List className={styles.todoList}>{comments}</List>;
 };
