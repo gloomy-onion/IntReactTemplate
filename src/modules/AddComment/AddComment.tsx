@@ -5,7 +5,7 @@ import styles from './AddComment.module.scss';
 import { getButtonType } from '../../shared/lib/utils/themeUtils';
 import { useThemeContext } from '../../context/ThemeContext';
 import { useLocalizationContext } from '../../context/LocalizationContext';
-import { commentModel } from '../../shared/api/todos';
+import { commentModel } from '../../shared/api/commentModel';
 
 export const AddComment = () => {
     const [newTask, setNewTask] = useState('');

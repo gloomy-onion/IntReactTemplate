@@ -4,8 +4,8 @@ import { useGate, useList, useUnit } from 'effector-react';
 import { TodoItem } from '../Item';
 import styles from './TodoList.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
-import { todoModel } from '../../shared/api/todos';
 import { Loading } from '../Loading';
+import { todoModel } from '../../shared/api/todoModel';
 
 export const TodoList = () => {
     const { deleteTodo, toggleDone, toggleImportant } = useTodoContext();

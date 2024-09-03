@@ -5,7 +5,7 @@ import styles from './AddTodoItem.module.scss';
 import { getButtonType } from '../../shared/lib/utils/themeUtils';
 import { useThemeContext } from '../../context/ThemeContext';
 import { useLocalizationContext } from '../../context/LocalizationContext';
-import { todoModel } from '../../shared/api/todos';
+import { todoModel } from '../../shared/api/todoModel';
 
 export const AddTodoItem = () => {
     const [newTask, setNewTask] = useState('');
