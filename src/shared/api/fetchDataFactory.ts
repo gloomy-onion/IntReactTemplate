@@ -20,7 +20,9 @@ export const createDataModel = <T>({
     const fetchItemsFx = createEffect(() => request());
     const $status = status({ effect: fetchItemsFx });
 
-    const addItemFx = createEffect((newItem: Omit<T, 'id'>) => createItem(newItem));
+    const addItemFx = createEffect<Omit<T, 'id'>, T, Error>((newItem: Omit<T, 'id'>) =>
+        createItem(newItem),
+    );
 
     const $items = createStore<T[]>(initialData);
 
