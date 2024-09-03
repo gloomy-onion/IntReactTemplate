@@ -4,8 +4,8 @@ import { useGate, useList, useUnit } from 'effector-react';
 import { TodoItem } from '../Item';
 import styles from './CommentList.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
-import { commentModel } from '../../shared/api/todos';
 import { Loading } from '../Loading';
+import { commentModel } from '../../shared/api/commentModel';
 
 export const CommentList = () => {
     const { deleteTodo, toggleDone, toggleImportant } = useTodoContext();

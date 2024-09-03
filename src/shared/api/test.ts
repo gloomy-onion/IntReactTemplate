@@ -1,5 +1,5 @@
 import { fork, allSettled } from 'effector';
-import { $todos, fetchTodosFx } from './todos';
+import { $todos, fetchTodosFx } from './fetchDataFactory';
 
 test('fetchTodosFx updates store correctly', async () => {
     fetchTodosFx.use(() => [
