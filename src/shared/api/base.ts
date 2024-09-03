@@ -6,9 +6,15 @@ export const apiInstance = axios.create({
     baseURL: 'https://jsonplaceholder.typicode.com',
 });
 
-export const TODOS_URL = '/users/1/todos';
+export const TODOS_URL = '/todos';
 
-const getTodos = () => apiInstance.get<TodoItem[]>(TODOS_URL);
+const getTodos = (start: number = 0, limit: number = 10) =>
+    apiInstance.get<TodoItem[]>(TODOS_URL, {
+        params: {
+            _start: start,
+            _limit: limit,
+        },
+    });
 const postTodo = (newTodo: Omit<TodoItem, 'id'>) => apiInstance.post<TodoItem>(TODOS_URL, newTodo);
 
 export const todosRequests = {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { List } from 'antd';
 import { useGate, useList, useUnit } from 'effector-react';
 import { TodoItem } from '../Item';
@@ -9,9 +9,11 @@ import { Loading } from '../Loading';
 
 export const TodoList = () => {
     const { deleteTodo, toggleDone, toggleImportant } = useTodoContext();
-
-    const { $items, $status, fetchGate } = todoModel;
+    const { $items, $status, fetchGate, fetchMoreItems } = todoModel;
     const status = useUnit($status);
+
+    const lastItemRef = useRef(null);
+    const pageRef = useRef(1);
     const todos = useList($items, (item) => (
         <List.Item key={item.id}>
             <TodoItem
@@ -23,8 +25,37 @@ export const TodoList = () => {
                 onDelete={() => deleteTodo(item.id)}
                 id={item.id}
             />
+            <div ref={lastItemRef} />
         </List.Item>
     ));
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        fetchMoreItems();
+                        pageRef.current += 1;
+                    }
+                });
+            },
+            {
+                threshold: 1,
+            },
+        );
+
+        const currentRef = lastItemRef.current;
+
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, [todos, fetchMoreItems]);
 
     useGate(fetchGate);
 

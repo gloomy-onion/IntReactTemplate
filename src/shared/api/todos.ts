@@ -6,7 +6,7 @@ import { TodoItem } from '../types/todo';
 import { CommentType } from '../types/comment';
 
 interface FetchDataFactoryOptions<T> {
-    request: () => Promise<T[]>;
+    request: (number: number, number1: number) => Promise<T[]>;
     createItem: (item: Omit<T, 'id'>) => Promise<T>;
     initialData?: T[];
 }
@@ -17,10 +17,17 @@ export const createDataModel = <T>({
     initialData = [],
 }: FetchDataFactoryOptions<T>) => {
     const fetchGate = createGate();
-    const fetchItems = createEvent();
+    const fetchItems = createEvent<void>();
+    const fetchMoreItems = createEvent<void>();
     const addItem = createEvent<Omit<T, 'id'>>();
+    const $start = createStore(0);
 
-    const fetchItemsFx = createEffect(async () => request());
+    const fetchItemsFx = createEffect(() => request(0, 10));
+    const fetchMoreItemsFx = createEffect(() => {
+        const start = $start.getState();
+
+        return request(start, 10);
+    });
     const $status = status({ effect: fetchItemsFx });
 
     const addItemFx = createEffect(async (newItem: Omit<T, 'id'>) => createItem(newItem));
@@ -29,9 +36,16 @@ export const createDataModel = <T>({
         .on(fetchItemsFx.doneData, (_, items) => items)
         .on(addItemFx.doneData, (prev, newItem) => [...prev, newItem]);
 
+    $start.on(fetchMoreItemsFx.doneData, (_, newItems) => _ + 10);
+
     sample({
         clock: fetchGate.open,
         target: fetchItems,
+    });
+
+    sample({
+        clock: fetchMoreItems,
+        target: fetchMoreItemsFx,
     });
 
     sample({
@@ -54,12 +68,13 @@ export const createDataModel = <T>({
         fetchGate,
         addItem,
         $items,
+        fetchMoreItems,
     };
 };
 
 export const todoModel = createDataModel<TodoItem>({
-    request: async () => {
-        const response = await todosRequests.getTodos();
+    request: async (start, limit) => {
+        const response = await todosRequests.getTodos(start, limit);
 
         return response.data;
     },
