@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Button, Input } from 'antd';
 import { useUnit } from 'effector-react';
-import styles from './AddTodoItem.module.scss';
+import styles from './AddComment.module.scss';
 import { getButtonType } from '../../shared/lib/utils/themeUtils';
 import { useThemeContext } from '../../context/ThemeContext';
 import { useLocalizationContext } from '../../context/LocalizationContext';
-import { todoModel } from '../../shared/api/todoModel';
+import { commentModel } from '../../shared/api/commentModel';
 
-export const AddTodoItem = () => {
+export const AddComment = () => {
     const [newTask, setNewTask] = useState('');
-    const addNewTodo = useUnit(todoModel.addItem);
+    const addNewTodo = useUnit(commentModel.addItem);
     const { currentTheme } = useThemeContext();
     const { translate } = useLocalizationContext();
 
@@ -18,10 +18,10 @@ export const AddTodoItem = () => {
     const handleAddTodo = () => {
         if (newTask) {
             addNewTodo({
-                title: newTask,
-                isImportant: false,
-                completed: false,
-                userId: '',
+                name: newTask,
+                body: '',
+                email: '',
+                postId: '',
             });
 
             setNewTask('');
