@@ -1,5 +1,19 @@
-import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+import {
+    createContext,
+    ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import { i18n, Language } from '../shared/lib/i18n/translations';
+import {
+    closeChannel,
+    createChannel,
+    listenToMessages,
+    sendMessage,
+} from '../shared/lib/services/broadcastService';
 
 type LocalizationContextType = {
     language: Language;
@@ -12,8 +26,27 @@ const LocalizationContext = createContext<LocalizationContextType | undefined>(u
 export const LocalizationProvider = ({ children }: { children: ReactNode }) => {
     const [language, setLanguage] = useState<Language>('en');
 
+    useEffect(() => {
+        createChannel();
+
+        listenToMessages((message) => {
+            if (message.type === 'language_change') {
+                setLanguage(message.data);
+            }
+        });
+
+        return () => {
+            closeChannel();
+        };
+    }, []);
+
     const toggleLanguage = useCallback(() => {
-        setLanguage((prevLanguage) => (prevLanguage === 'en' ? 'ru' : 'en'));
+        setLanguage((prevLanguage) => {
+            const newLanguage = prevLanguage === 'en' ? 'ru' : 'en';
+            sendMessage({ type: 'language_change', data: newLanguage });
+
+            return newLanguage;
+        });
     }, []);
 
     const translate = useCallback(

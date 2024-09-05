@@ -20,7 +20,7 @@ export const Header = () => {
     const buttonType = getButtonType(currentTheme);
     const typographyColor = getTextColor(currentTheme);
     const showModal = () => setOpenModal(true);
-    const closeModal = () => setOpenModal(false); // добавлено для закрытия модального окна
+    const closeModal = () => setOpenModal(false);
 
     return (
         <div className={styles.header}>
