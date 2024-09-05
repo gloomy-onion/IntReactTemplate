@@ -1,0 +1,1 @@
+export { YandexShare } from './YaShare';

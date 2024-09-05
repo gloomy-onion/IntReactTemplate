@@ -13,7 +13,6 @@ export const TodoList = () => {
     const status = useUnit($status);
 
     const lastItemRef = useRef(null);
-    const pageRef = useRef(1);
     const todos = useList($items, (item) => (
         <List.Item key={item.id}>
             <TodoItem
@@ -25,7 +24,6 @@ export const TodoList = () => {
                 onDelete={() => deleteTodo(item.id)}
                 id={item.id}
             />
-            <div ref={lastItemRef} />
         </List.Item>
     ));
 
@@ -35,7 +33,6 @@ export const TodoList = () => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         fetchMoreItems();
-                        pageRef.current += 1;
                     }
                 });
             },
@@ -63,5 +60,10 @@ export const TodoList = () => {
         return <Loading />;
     }
 
-    return <List className={styles.todoList}>{todos}</List>;
+    return (
+        <>
+            <List className={styles.todoList}>{todos}</List>
+            <div ref={lastItemRef} />
+        </>
+    );
 };

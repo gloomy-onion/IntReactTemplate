@@ -12,6 +12,7 @@ import { getBackgroundColor } from '../../shared/lib/utils/themeUtils';
 import themeStyles from '../../shared/lib/styles/Theme.module.scss';
 import { CommentList } from '../../modules/CommentList';
 import { AddComment } from '../../modules/AddComment';
+import { YandexShare } from '../../modules/YaShare';
 
 export const MainPage = () => {
     const { currentTheme } = useThemeContext();
@@ -40,6 +41,7 @@ export const MainPage = () => {
                         <AddTodoItem />
                     </div>
                 </section>
+                <YandexShare />
             </main>
         </div>
     );

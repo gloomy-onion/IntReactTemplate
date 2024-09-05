@@ -3,7 +3,7 @@ import { createGate } from 'effector-react';
 import { status } from 'patronum';
 
 interface FetchDataFactoryOptions<T> {
-    request: () => Promise<T[]>;
+    request: (number: number, number1: number) => Promise<T[]>;
     createItem: (item: Omit<T, 'id'>) => Promise<T>;
     initialData?: T[];
 }
@@ -15,9 +15,13 @@ export const createDataModel = <T>({
 }: FetchDataFactoryOptions<T>) => {
     const fetchGate = createGate();
     const fetchItems = createEvent();
+    const incStart = createEvent();
+    const fetchMoreItems = createEvent();
     const addItem = createEvent<Omit<T, 'id'>>();
+    const $start = createStore(0);
 
-    const fetchItemsFx = createEffect(() => request());
+    const fetchItemsFx = createEffect(() => request(0, 10));
+    const fetchMoreItemsFx = createEffect((start: number) => request(start, 10));
     const $status = status({ effect: fetchItemsFx });
 
     const addItemFx = createEffect<Omit<T, 'id'>, T, Error>((newItem: Omit<T, 'id'>) =>
@@ -34,6 +38,19 @@ export const createDataModel = <T>({
     sample({
         clock: fetchItems,
         target: fetchItemsFx,
+    });
+
+    sample({
+        clock: fetchMoreItems,
+        source: $start,
+        target: fetchMoreItemsFx,
+    });
+
+    sample({
+        clock: incStart,
+        source: $start,
+        fn: (source) => source + 10,
+        target: $start,
     });
 
     sample({
@@ -54,10 +71,18 @@ export const createDataModel = <T>({
         target: $items,
     });
 
+    sample({
+        clock: fetchMoreItemsFx.doneData,
+        source: $items,
+        fn: (source, clock) => [...source, ...clock],
+        target: [$items, incStart],
+    });
+
     return {
         $status,
         fetchGate,
         addItem,
         $items,
+        fetchMoreItems,
     };
 };
