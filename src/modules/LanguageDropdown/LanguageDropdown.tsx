@@ -9,7 +9,7 @@ import { getButtonType } from '../../shared/lib/utils/themeUtils';
 import { useThemeContext } from '../../context/ThemeContext';
 
 export const LanguageDropdown = () => {
-    const { setLanguage, translate } = useLocalizationContext();
+    const { toggleLanguage, translate } = useLocalizationContext();
     const { currentTheme } = useThemeContext();
     const buttonType = getButtonType(currentTheme);
 
@@ -22,7 +22,7 @@ export const LanguageDropdown = () => {
             key: 'ru',
             label: 'Русский',
             onClick: () => {
-                setLanguage('ru');
+                toggleLanguage();
                 setDropdownVisible(false);
             },
         },
@@ -30,7 +30,7 @@ export const LanguageDropdown = () => {
             key: 'en',
             label: 'English',
             onClick: () => {
-                setLanguage('en');
+                toggleLanguage();
                 setDropdownVisible(false);
             },
         },

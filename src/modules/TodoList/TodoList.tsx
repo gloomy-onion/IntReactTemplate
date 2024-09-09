@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { List } from 'antd';
 import { useGate, useList, useUnit } from 'effector-react';
 import { TodoItem } from '../Item';
@@ -9,9 +9,10 @@ import { todoModel } from '../../shared/api/todoModel';
 
 export const TodoList = () => {
     const { deleteTodo, toggleDone, toggleImportant } = useTodoContext();
-
-    const { $items, $status, fetchGate } = todoModel;
+    const { $items, $status, fetchGate, fetchMoreItems } = todoModel;
     const status = useUnit($status);
+
+    const lastItemRef = useRef(null);
     const todos = useList($items, (item) => (
         <List.Item key={item.id}>
             <TodoItem
@@ -26,11 +27,43 @@ export const TodoList = () => {
         </List.Item>
     ));
 
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        fetchMoreItems();
+                    }
+                });
+            },
+            {
+                threshold: 1,
+            },
+        );
+
+        const currentRef = lastItemRef.current;
+
+        if (currentRef) {
+            observer.observe(currentRef);
+        }
+
+        return () => {
+            if (currentRef) {
+                observer.unobserve(currentRef);
+            }
+        };
+    }, [todos, fetchMoreItems]);
+
     useGate(fetchGate);
 
     if (status === 'pending') {
         return <Loading />;
     }
 
-    return <List className={styles.todoList}>{todos}</List>;
+    return (
+        <>
+            <List className={styles.todoList}>{todos}</List>
+            <div ref={lastItemRef} />
+        </>
+    );
 };

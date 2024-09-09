@@ -2,7 +2,7 @@ export const getButtonType = (currentTheme: string) =>
     currentTheme === 'light' ? 'primary' : 'default';
 
 export const getTextColor = (currentTheme: string) =>
-    currentTheme === 'dark' ? 'typographyDark' : '';
+    (currentTheme === 'dark' ? 'typographyDark' : '');
 
 export const getBackgroundColor = (currentTheme: string) =>
     currentTheme === 'dark' ? 'backgroundDark' : '';
