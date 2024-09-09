@@ -1,11 +1,7 @@
 import { BroadcastMessage } from '../../types/broadcast';
 
 const channelName = 'theme_channel';
-let channel: BroadcastChannel | null = null;
-
-export const createChannel = (): void => {
-    channel = new BroadcastChannel(channelName);
-};
+const channel: BroadcastChannel | null = new BroadcastChannel(channelName);
 
 export const sendMessage = (message: BroadcastMessage): void => {
     if (channel) {
@@ -21,11 +17,5 @@ export const listenToMessages = (callback: (message: BroadcastMessage) => void):
         };
 
         channel.addEventListener('message', handleMessage);
-    }
-};
-export const closeChannel = (): void => {
-    if (channel) {
-        channel.close();
-        channel = null;
     }
 };

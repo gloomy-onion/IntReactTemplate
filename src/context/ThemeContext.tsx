@@ -7,12 +7,7 @@ import {
     useMemo,
     useState,
 } from 'react';
-import {
-    closeChannel,
-    createChannel,
-    listenToMessages,
-    sendMessage,
-} from '../shared/lib/services/broadcastService';
+import { listenToMessages, sendMessage } from '../shared/lib/services/broadcastService';
 
 type ThemeContextType = {
     currentTheme: string;
@@ -27,27 +22,20 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
     useEffect(() => {
-        createChannel();
-
         listenToMessages((message) => {
             if (message.type === 'theme_change') {
                 setTheme(message.data);
             }
         });
-
-        return () => {
-            closeChannel();
-        };
     }, []);
 
     const toggleTheme = useCallback(() => {
-        setTheme((prevTheme) => {
-            const newTheme = prevTheme === 'light' ? 'dark' : 'light';
-            sendMessage({ type: 'theme_change', data: newTheme });
-
-            return newTheme;
-        });
+        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
     }, []);
+
+    useEffect(() => {
+        sendMessage({ type: 'theme_change', data: theme });
+    }, [theme]);
 
     const value = useMemo(
         () => ({
