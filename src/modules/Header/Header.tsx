@@ -10,6 +10,7 @@ import themeStyles from '../../shared/lib/styles/Theme.module.scss';
 import { useLocalizationContext } from '../../context/LocalizationContext';
 import { LanguageDropdown } from '../LanguageDropdown';
 import { Map } from '../Map';
+import { CookieButtons } from '../CookieButtons';
 
 export const Header = () => {
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -26,6 +27,7 @@ export const Header = () => {
         <div className={styles.header}>
             <div className={styles.headerButtons}>
                 <LanguageDropdown />
+                <CookieButtons />
                 <Button type={buttonType} size="large" onClick={showModal}>
                     {translate('openMap')}
                 </Button>
