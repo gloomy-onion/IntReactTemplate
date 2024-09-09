@@ -4,7 +4,7 @@ import { status } from 'patronum';
 
 type FetchDataFactoryOptions<T> = {
     request: (offset: number, limit: number) => Promise<T[]>;
-    createItem: (item: Omit<T, 'id'>) => Promise<T>;
+    createItem: (item: Omit<T, 'id'>, signal: AbortSignal) => Promise<T>;
     initialData?: T[];
 };
 
@@ -22,9 +22,14 @@ export const createDataModel = <T>({
 
     const fetchItemsFx = createEffect(() => request(0, 10));
     const fetchMoreItemsFx = createEffect((start: number) => request(start, 10));
-    const addItemFx = createEffect<Omit<T, 'id'>, T, Error>((newItem: Omit<T, 'id'>) =>
-        createItem(newItem),
-    );
+    const addItemFx = createEffect(async (newItem: Omit<T, 'id'>) => {
+        const controller = new AbortController();
+        const { signal } = controller;
+
+        const data = await createItem(newItem, signal);
+
+        return { data, controller };
+    });
 
     const $start = createStore(0);
     const $items = createStore<T[]>(initialData);
@@ -67,7 +72,11 @@ export const createDataModel = <T>({
     sample({
         clock: addItemFx.doneData,
         source: $items,
-        fn: (prev, newItem) => [...prev, newItem],
+        fn: (prev, { data, controller }) => {
+            controller.abort();
+
+            return [...prev, data];
+        },
         target: $items,
     });
 
