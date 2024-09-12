@@ -1,20 +1,20 @@
 import React from 'react';
 import cn from 'classnames';
 import { useResizeObserver } from '../../shared/lib/hooks';
-import { TodoList } from '../../modules/TodoList';
-import styles from './MainPage.module.scss';
-import { AddTodoItem } from '../../modules/AddTodoItem';
-import { TodoFilter } from '../../modules/TodoFilter';
-import { Header } from '../../modules/Header';
-import { Search } from '../../modules/Search';
+import { TodoList } from '../TodoList';
+import styles from './MainContent.module.scss';
+import { AddTodoItem } from '../AddTodoItem';
+import { TodoFilter } from '../TodoFilter';
+import { Header } from '../Header';
+import { Search } from '../Search';
 import { useThemeContext } from '../../context/ThemeContext';
 import { getBackgroundColor } from '../../shared/lib/utils/themeUtils';
 import themeStyles from '../../shared/lib/styles/Theme.module.scss';
-import { CommentList } from '../../modules/CommentList';
-import { AddComment } from '../../modules/AddComment';
-import { YandexShare } from '../../modules/YaShare';
+import { CommentList } from '../CommentList';
+import { AddComment } from '../AddComment';
+import { YandexShare } from '../YaShare';
 
-export const MainPage = () => {
+export const MainContent = () => {
     const { currentTheme } = useThemeContext();
     const backgroundColor = getBackgroundColor(currentTheme);
 
