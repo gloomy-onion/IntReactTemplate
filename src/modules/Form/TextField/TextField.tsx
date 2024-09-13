@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React, { FocusEvent, InputHTMLAttributes, useState } from 'react';
 import { Typography } from 'antd';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, get } from 'react-hook-form';
 import styles from './TextField.module.scss';
 
 type TextFieldProps = {
-    placeholder?: string;
     label?: string;
-    name: string;
-    type?: string;
-    defaultValue?: string;
-};
+} & InputHTMLAttributes<HTMLInputElement>;
 
 export const TextField = ({
     placeholder,
     label,
-    name,
+    name = '',
     type = 'text',
-    defaultValue = '',
+    onFocus,
+    onBlur,
     ...props
 }: TextFieldProps) => {
     const {
@@ -27,36 +24,35 @@ export const TextField = ({
     } = useFormContext();
     const [isFocused, setIsFocused] = useState(false);
 
-    const currentValue = watch(name, defaultValue);
-
-    const fieldError = errors[name]?.message as string;
-
+    const currentValue = watch(name);
+    const fieldError = get(errors, name)?.message;
     const handleClear = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         setValue(name, '');
         setIsFocused(false);
     };
 
-    const handleFocus = () => {
+    const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
         setIsFocused(true);
+        onFocus?.(e);
     };
 
-    const handleBlur = () => {
+    const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
         setIsFocused(false);
+        onBlur?.(e);
     };
 
     return (
         <div className={styles.textField}>
             <div className={styles.textFieldInputCover}>
                 <input
+                    {...props}
                     {...register(name)}
                     type={type}
                     placeholder={isFocused ? '' : placeholder}
                     className={styles.formInput}
-                    defaultValue={defaultValue}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
-                    {...props}
                 />
                 {label && <Typography.Text className={styles.label}>{label}</Typography.Text>}
                 {currentValue && <button className={styles.clearButton} onClick={handleClear} />}

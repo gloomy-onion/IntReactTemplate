@@ -14,6 +14,19 @@ type FormProps = {
 export const Form = ({ documentName = 'Document' }: FormProps) => {
     const methods = useForm<FormType>({
         resolver: yupResolver(formSchema),
+        defaultValues: {
+            surname: '',
+            name: '',
+            patronymic: '',
+            contacts: {
+                address: {
+                    city: '',
+                    street: '',
+                    house: '',
+                },
+                phones: [],
+            },
+        },
     });
 
     const onSubmit: SubmitHandler<FormType> = (data) => {

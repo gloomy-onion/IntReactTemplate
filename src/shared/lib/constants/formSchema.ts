@@ -13,8 +13,8 @@ export const formSchema = yup.object({
         .min(2, 'Name must be at least 2 characters')
         .max(50, 'Name cannot exceed 50 characters'),
     patronymic: yup.string().nullable(),
-    contacts: yup.object({
-        address: yup.object({
+    contacts: yup.object().shape({
+        address: yup.object().shape({
             city: yup.string().required('City is required'),
             street: yup.string().required('Street is required'),
             house: yup.string().required('House is required'),
