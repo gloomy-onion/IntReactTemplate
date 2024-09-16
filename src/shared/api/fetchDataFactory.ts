@@ -1,10 +1,11 @@
 import { createEffect, createEvent, createStore, sample } from 'effector';
 import { createGate } from 'effector-react';
 import { status } from 'patronum';
+import { withAbortController } from './abortController';
 
 type FetchDataFactoryOptions<T> = {
     request: (offset: number, limit: number) => Promise<T[]>;
-    createItem: (item: Omit<T, 'id'>, signal: AbortSignal) => Promise<T>;
+    createItem: (item: Omit<T, 'id'>) => Promise<T>;
     initialData?: T[];
 };
 
@@ -22,14 +23,13 @@ export const createDataModel = <T>({
 
     const fetchItemsFx = createEffect(() => request(0, 10));
     const fetchMoreItemsFx = createEffect((start: number) => request(start, 10));
-    const addItemFx = createEffect(async (newItem: Omit<T, 'id'>) => {
-        const controller = new AbortController();
-        const { signal } = controller;
+    const addItemFx = createEffect(
+        withAbortController(async (newItem: Omit<T, 'id'>) => {
+            const data = await createItem(newItem);
 
-        const data = await createItem(newItem, signal);
-
-        return { data, controller };
-    });
+            return data;
+        }),
+    );
 
     const $start = createStore(0);
     const $items = createStore<T[]>(initialData);
@@ -72,11 +72,7 @@ export const createDataModel = <T>({
     sample({
         clock: addItemFx.doneData,
         source: $items,
-        fn: (prev, { data, controller }) => {
-            controller.abort();
-
-            return [...prev, data];
-        },
+        fn: (prevItems, newItem) => [...prevItems, newItem],
         target: $items,
     });
 
