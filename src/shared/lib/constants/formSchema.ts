@@ -19,6 +19,13 @@ export const formSchema = yup.object({
             street: yup.string().required('Street is required'),
             house: yup.string().required('House is required'),
         }),
-        phones: yup.array().of(yup.string().required('Phone number is required')).nullable(),
+        phones: yup
+            .array()
+            .of(
+                yup.object({
+                    value: yup.string().required('Phone number is required'),
+                }),
+            )
+            .nullable(),
     }),
 });

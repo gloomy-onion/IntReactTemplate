@@ -8,6 +8,6 @@ export type FormType = {
             street: string;
             house: string;
         };
-        phones?: string[] | null;
+        phones?: { value: string }[] | null;
     };
 };

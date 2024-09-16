@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Typography } from 'antd';
-import { SubmitHandler, useForm, FormProvider } from 'react-hook-form';
+import { SubmitHandler, useForm, FormProvider, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from './TextField';
 import styles from './Form.module.scss';
@@ -24,15 +24,28 @@ export const Form = ({ documentName = 'Document' }: FormProps) => {
                     street: '',
                     house: '',
                 },
-                phones: [],
+                phones: [{ value: '' }],
             },
         },
     });
+    const { control } = methods;
+    const { fields, append } = useFieldArray({
+        control,
+        name: 'contacts.phones' as const,
+    });
 
     const onSubmit: SubmitHandler<FormType> = (data) => {
+        const phoneValues = data.contacts.phones?.map((phone) => phone.value);
+
         const transformedData = {
             documentName,
-            items: { ...data },
+            items: {
+                ...data,
+                contacts: {
+                    ...data.contacts,
+                    phones: phoneValues,
+                },
+            },
         };
 
         console.log(transformedData);
@@ -40,9 +53,11 @@ export const Form = ({ documentName = 'Document' }: FormProps) => {
 
     return (
         <FormProvider {...methods}>
-            <form id="form" onSubmit={methods.handleSubmit(onSubmit)}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
                 <div className={styles.form}>
-                    <Typography.Title level={2}>{documentName}</Typography.Title>
+                    <legend>
+                        <Typography.Title level={2}>{documentName}</Typography.Title>
+                    </legend>
                     <TextField label="Surname" name="surname" placeholder="Enter surname" />
                     <TextField label="Name" name="name" placeholder="Enter name" />
                     <TextField
@@ -50,11 +65,16 @@ export const Form = ({ documentName = 'Document' }: FormProps) => {
                         name="patronymic"
                         placeholder="Enter patronymic"
                     />
-
-                    <div className={styles.contacts}>
-                        <Typography.Title level={4}>Contacts</Typography.Title>
+                    <fieldset className={styles.contacts}>
+                        <legend>
+                            <Typography.Title level={4} className={styles.formText}>
+                                Contacts
+                            </Typography.Title>
+                        </legend>
                         <div className={styles.address}>
-                            <Typography.Title level={4}>Address</Typography.Title>
+                            <Typography.Title level={4} className={styles.formText}>
+                                Address
+                            </Typography.Title>
                             <TextField
                                 label="City"
                                 name="contacts.address.city"
@@ -71,16 +91,30 @@ export const Form = ({ documentName = 'Document' }: FormProps) => {
                                 placeholder="Enter house"
                             />
                         </div>
-                        <div className={styles.phones}>
-                            <Typography.Title level={4}>Phones</Typography.Title>
-                            <TextField
-                                label="Phone"
-                                name="contacts.phones[0]"
-                                placeholder="Enter phone number"
-                            />
-                            <Button size="large">Add</Button>
-                        </div>
-                    </div>
+                        <fieldset className={styles.phones}>
+                            <legend>
+                                <Typography.Title level={4} className={styles.formText}>
+                                    Phones
+                                </Typography.Title>
+                            </legend>
+                            {fields.map((phone, index) => (
+                                <TextField
+                                    key={phone.id}
+                                    label={`Phone ${index + 1}`}
+                                    name={`contacts.phones[${index}].value`}
+                                    placeholder="Enter phone number"
+                                />
+                            ))}
+                            <Button
+                                size="large"
+                                onClick={() => {
+                                    append({ value: '' });
+                                }}
+                            >
+                                Add
+                            </Button>
+                        </fieldset>
+                    </fieldset>
                     <Button size="large" htmlType="submit">
                         Submit
                     </Button>
