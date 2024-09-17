@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Typography } from 'antd';
 import cn from 'classnames';
 import { createPortal } from 'react-dom';
+import { Link } from 'react-router-dom';
 import styles from './Header.module.scss';
 import { useTodoContext } from '../../context/TodoContext';
 import { useThemeContext } from '../../context/ThemeContext';
@@ -27,6 +28,9 @@ export const Header = () => {
         <div className={styles.header}>
             <div className={styles.headerButtons}>
                 <LanguageDropdown />
+                <Link to="/form">
+                    <Button>Открыть форму</Button>
+                </Link>
                 <CookieButtons />
                 <Button type={buttonType} size="large" onClick={showModal}>
                     {translate('openMap')}
