@@ -23,13 +23,11 @@ export const createDataModel = <T>({
 
     const fetchItemsFx = createEffect(() => request(0, 10));
     const fetchMoreItemsFx = createEffect((start: number) => request(start, 10));
-    const addItemFx = createEffect(
-        withAbortController(async (newItem: Omit<T, 'id'>) => {
-            const data = await createItem(newItem);
+    const addItemFx = createEffect<Omit<T, 'id'>, T, Error>(async (newItem: Omit<T, 'id'>) => {
+        const data = await createItem(newItem);
 
-            return data;
-        }),
-    );
+        return data;
+    });
 
     const $start = createStore(0);
     const $items = createStore<T[]>(initialData);
@@ -72,7 +70,7 @@ export const createDataModel = <T>({
     sample({
         clock: addItemFx.doneData,
         source: $items,
-        fn: (prevItems, newItem) => [...prevItems, newItem],
+        fn: (prevItems, newItem) => [...prevItems, newItem as T],
         target: $items,
     });
 

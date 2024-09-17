@@ -11,8 +11,9 @@ const getTodos = (start: number = 0, limit: number = 10) =>
         },
     });
 
-const postTodo = ({ signal, ...params }: WithAbortController<TodoItem>) =>
-    apiInstance.post<TodoItem>(TODOS_URL, { params, signal });
+const postTodo = ({ signal, ...params }: WithAbortController<TodoItem>) => {
+    return apiInstance.post<TodoItem>(TODOS_URL, { params }, { signal });
+};
 
 export const todosRequests = {
     getTodos,
