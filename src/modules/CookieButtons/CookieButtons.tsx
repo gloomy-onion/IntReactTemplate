@@ -1,59 +1,25 @@
 import React from 'react';
 import { Button } from 'antd';
+import { deleteCookie, getCookie, setCookie } from 'shared/lib/utils/cookie';
 
 export const CookieButtons = () => {
-    const getCookie = (name: string) => {
-        const matches = document.cookie.match(
-            `(?:^|; )${name.replaceAll(/([$()*+./?[\\]^{}|])/g, '\\$1')}=([^;]*)`,
-        );
-
-        return matches
-            ? // eslint-disable-next-line no-console
-              console.log(decodeURIComponent(matches[1]))
-            : // eslint-disable-next-line no-console
-              console.log('Cookie not found');
-    };
-
-    const setCookie = (name: string, value: string, options: { [key: string]: any } = {}) => {
-        options = {
-            path: '/',
-            ...options,
-        };
-
-        if (options.expires instanceof Date) {
-            options.expires = options.expires.toUTCString();
-        }
-
-        let updatedCookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
-
-        for (const optionKey in options) {
-            updatedCookie += `; ${optionKey}`;
-            const optionValue = options[optionKey];
-            if (optionValue !== true) {
-                updatedCookie += `=${optionValue}`;
-            }
-        }
-
-        document.cookie = updatedCookie;
-    };
-
-    const deleteCookie = (name: string) => {
-        setCookie(name, '', { 'max-age': -1 });
-    };
-
-    const handleGetClick = () => {
+    const handleGet = () => {
         getCookie('user');
     };
 
-    const handleSetClick = () => {
-        setCookie('user', 'John', { 'max-age': 3600 });
+    const handleSet = () => {
+        setCookie('user', 'John', { expires: 3600 / (60 * 60 * 24) });
+    };
+
+    const handleDelete = () => {
+        deleteCookie('user');
     };
 
     return (
         <div>
-            <Button onClick={handleGetClick}>Get Cookie</Button>
-            <Button onClick={handleSetClick}>Set Cookie</Button>
-            <Button onClick={() => deleteCookie('user')}>Delete Cookie</Button>
+            <Button onClick={handleGet}>Get Cookie</Button>
+            <Button onClick={handleSet}>Set Cookie</Button>
+            <Button onClick={handleDelete}>Delete Cookie</Button>
         </div>
     );
 };
