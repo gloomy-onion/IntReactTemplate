@@ -36,8 +36,6 @@
     "*.{css,scss}": "stylelint"
   },
   "devDependencies": {
-    "@rc-foundation/commitlint-rc": "^0.1.2",
-    "@rc-foundation/eslint-config-rc": "^0.0.20",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
@@ -45,10 +43,10 @@
     "@typescript-eslint/parser": "^5.44.0",
     "@vitejs/plugin-react": "^2.2.0",
     "eslint": "8.22.0",
-    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.23.0",
-    "eslint-plugin-prettier": "^3.3.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unicorn": "^45.0.0",
