@@ -13,6 +13,7 @@ import themeStyles from '../../shared/lib/styles/Theme.module.scss';
 import { CommentList } from '../CommentList';
 import { AddComment } from '../AddComment';
 import { YandexShare } from '../YaShare';
+import { Image } from 'antd';
 
 export const MainContent = () => {
     const { currentTheme } = useThemeContext();
@@ -28,6 +29,7 @@ export const MainContent = () => {
                 <Header />
                 <Search />
                 <TodoFilter />
+                <Image src={'public/sticker.webp'} width={30} height={30} />
                 <section
                     className={cn(styles.mainSection, { [styles.verticalLayout]: isVertical })}
                     ref={observedElementRef}
