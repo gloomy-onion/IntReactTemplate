@@ -5,7 +5,6 @@ import svgrPlugin from 'vite-plugin-svgr';
 
 export default () => {
     return defineConfig({
-        base: '/IntReactTemplate/',
         build: {
             outDir: './build'
         },
@@ -24,6 +23,15 @@ export default () => {
         server: {
             host: 'localhost',
             port: 3000,
+            /*
+            proxy: {
+                '/api': {
+                    changeOrigin: true,
+                    target: 'https://your.host/',
+                    secure: false,
+                },
+            },
+            cors: false,*/
         },
         esbuild: {
             define: {
